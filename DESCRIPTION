@@ -1,4 +1,4 @@
-Package: ThreeUTR
+Package: DoGs
 Type: Package
 Title: An R package for processing and analyzing 3UTR,DOGs and 5UTR data
 Version: 0.99.0

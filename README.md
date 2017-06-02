@@ -27,21 +27,21 @@ In R console
 
 library(devtools)
 
-install_github("aiminy/3UTR-Seq",ref = '3UTR')
+install_github("SCCC-BBC/DoGs")
 
-Install updated ThreeUTR without restarting R
+Install updated DoGs without restarting R
 
-detach("package:ThreeUTR", unload=TRUE)
+detach("package:DoGs", unload=TRUE)
 
-library(ThreeUTR)
+library(DoGs)
 
 In pegasus terminal 
 
-R -e 'library(devtools);install_github("aiminy/3UTR-Seq",ref = "3UTR")'
+R -e 'library(devtools);install_github("SCCC-BBC/DoGs")'
 
 To start analysis
 ```{r}
-Rscript ~/R/lib64/R/library/ThreeUTR/bin/rscript/utr_interactive.r
+Rscript ~/R/lib64/R/library/DoGs/bin/rscript/utr_interactive.r
 ```
 You will see a list of job options, then you can choose the job you want to do
 ```{}
@@ -93,10 +93,10 @@ You choose 7, you will see the following:
 ```
 # You choose to process bam files
 # Firstly, we remove reads for which the insert size is < 100 or > 200 by using the follwoing procedure
-R -e 'library(ChipSeq);library(ThreeUTR);ThreeUTR:::splitBam('/scratch/projects/bbc/aiminy_project/DoGs/BAM','/scratch/projects/bbc/aiminy_project/DoGs/Bam_split')'
+R -e 'library(ChipSeq);library(DoGs);DoGs:::splitBam('/scratch/projects/bbc/aiminy_project/DoGs/BAM','/scratch/projects/bbc/aiminy_project/DoGs/Bam_split')'
 
 #Secondly, we convert bam files to strand-specific BigWig files by using the following procedure
-R -e 'library(ChipSeq);library(ThreeUTR);ThreeUTR:::convertBam2StrandBw2("/scratch/projects/bbc/aiminy_project/DoGs/Bam_split/","/scratch/projects/bbc/aiminy_project/DoGs/BW_split")'
+R -e 'library(ChipSeq);library(DoGs);DoGs:::convertBam2StrandBw2("/scratch/projects/bbc/aiminy_project/DoGs/Bam_split/","/scratch/projects/bbc/aiminy_project/DoGs/BW_split")'
 ```
 After this, you can load strand-specific BigWig to IGV to visualize DoGs. The following is an example to show DoGs
 ![Image of DoGs](inst/extdata/DoGs.png)
@@ -106,56 +106,56 @@ Since we are interested in intergenic reads instead of reads overlapping with ex
 ```{r}
 # Step1: Download RNA sequening short read SRA file
 
-R -e 'library(ChipSeq);library(ThreeUTR);re <- ThreeUTR:::useWget2Download("SRP058633","/nethome/axy148/DoGsExample")'
+R -e 'library(ChipSeq);library(DoGs);re <- DoGs:::useWget2Download("SRP058633","/nethome/axy148/DoGsExample")'
 
 # Step2: Convert SRA files to fastq files
 # If you do not have waited job or run on machine that is not cluster 
-R -e 'library(ChipSeq);library(ThreeUTR);re<-ThreeUTR:::useFastqDumpConvertSra2Fastq("/nethome/axy148/DoGsExample","/scratch/projects/bbc/aiminy_project/DoGsFastq")'
+R -e 'library(ChipSeq);library(DoGs);re<-DoGs:::useFastqDumpConvertSra2Fastq("/nethome/axy148/DoGsExample","/scratch/projects/bbc/aiminy_project/DoGsFastq")'
 
 # On pegasus, you need to run this if you want to start conversion automatically after downloading using wget
-R -e 'library(ChipSeq);library(ThreeUTR);re <- ThreeUTR:::useFastqDumpConvertSra2Fastq("/nethome/axy148/DoGsExample","/scratch/projects/bbc/aiminy_project/DoGsFastq",wait.job.name = "wgetDownload")'
+R -e 'library(ChipSeq);library(DoGs);re <- DoGs:::useFastqDumpConvertSra2Fastq("/nethome/axy148/DoGsExample","/scratch/projects/bbc/aiminy_project/DoGsFastq",wait.job.name = "wgetDownload")'
 
 # Step3: Align fastq files to hg19 reference genome
 
-R -e 'library(ChipSeq);library(ThreeUTR);ThreeUTR:::useTophat4Alignment("/scratch/projects/bbc/aiminy_project/DoGsFastq","/scratch/projects/bbc/aiminy_project/DoGs_AlignmentBamTophatGeneral2","/projects/ctsi/bbc/Genome_Ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.gtf","/projects/ctsi/bbc/Genome_Ref/Homo_sapiens/UCSC/hg19/Sequence/Bowtie2Index/genome","General")'
+R -e 'library(ChipSeq);library(DoGs);DoGs:::useTophat4Alignment("/scratch/projects/bbc/aiminy_project/DoGsFastq","/scratch/projects/bbc/aiminy_project/DoGs_AlignmentBamTophatGeneral2","/projects/ctsi/bbc/Genome_Ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.gtf","/projects/ctsi/bbc/Genome_Ref/Homo_sapiens/UCSC/hg19/Sequence/Bowtie2Index/genome","General")'
 
 # Step4: 
 # Rename accepted_hits.bam based on sample name and move all bam files to another same directory
 # Ex:
 # rename /scratch/projects/bbc/aiminy_project/DoGs_AlignmentBamTophatGeneral2/SRR2038198/Fs12/accepted_hits.bam to /scratch/projects/bbc/aiminy_project/DoGs/BAM/SRR2038198-Fs12-accepted_hits.bam
 
-R -e 'library(ThreeUTR);ThreeUTR:::processBamFiles('/scratch/projects/bbc/aiminy_project/DoGs_AlignmentBamTophatGeneral2','/scratch/projects/bbc/aiminy_project/DoGs/BAM')'
+R -e 'library(DoGs);DoGs:::processBamFiles('/scratch/projects/bbc/aiminy_project/DoGs_AlignmentBamTophatGeneral2','/scratch/projects/bbc/aiminy_project/DoGs/BAM')'
 
 # Step5: Convert the aligned bam files to strand-specific bigwig files
-R -e 'library(ChipSeq);library(ThreeUTR);ThreeUTR:::convertBam2StrandBw2('/scratch/projects/bbc/aiminy_project/DoGs/BAM','/scratch/projects/bbc/aiminy_project/DoGs/BW2')
+R -e 'library(ChipSeq);library(DoGs);DoGs:::convertBam2StrandBw2('/scratch/projects/bbc/aiminy_project/DoGs/BAM','/scratch/projects/bbc/aiminy_project/DoGs/BW2')
 
 # Step6: Convert the aligned bam files to bed files
 
-R -e 'library(ChipSeq);library(ThreeUTR);re <- ThreeUTR:::convertbam2bed('/scratch/projects/bbc/aiminy_project/DoGs/BAM','/scratch/projects/bbc/aiminy_project/DoGs')'
+R -e 'library(ChipSeq);library(DoGs);re <- DoGs:::convertbam2bed('/scratch/projects/bbc/aiminy_project/DoGs/BAM','/scratch/projects/bbc/aiminy_project/DoGs')'
 
 # Step7: Remove reads overlappping with exons and intron firstly
 
-R -e 'library(ChipSeq);library(ThreeUTR);ThreeUTR:::removeReadsOnExonIntron("/scratch/projects/bbc/aiminy_project/DoGs/BedFileFromBam","/projects/ctsi/bbc/aimin/annotation/","/scratch/projects/bbc/aiminy_project/DoGs/BedRmExonIntron")'
+R -e 'library(ChipSeq);library(DoGs);DoGs:::removeReadsOnExonIntron("/scratch/projects/bbc/aiminy_project/DoGs/BedFileFromBam","/projects/ctsi/bbc/aimin/annotation/","/scratch/projects/bbc/aiminy_project/DoGs/BedRmExonIntron")'
 
 # Step8: Get counts of intergenic reads with 45kb downstream of transcripts 
 
-R -e 'library(ChipSeq);library(ThreeUTR);ThreeUTR:::getCount4Downstream(""/scratch/projects/bbc/aiminy_project/DoGs/BedRmExonIntron","/projects/ctsi/bbc/aimin/annotation/","/scratch/projects/bbc/aiminy_project/DoGs/Counts45KB")'
+R -e 'library(ChipSeq);library(DoGs);DoGs:::getCount4Downstream(""/scratch/projects/bbc/aiminy_project/DoGs/BedRmExonIntron","/projects/ctsi/bbc/aimin/annotation/","/scratch/projects/bbc/aiminy_project/DoGs/Counts45KB")'
 
 # Step9: Convert count files to count table, 
-R -e 'library(ChipSeq);library(ThreeUTR);res <- convertCountFile2Table("~/Dropbox (BBSR)/Aimin_project/Research/DoGs/Counts","*.txt")'
+R -e 'library(ChipSeq);library(DoGs);res <- convertCountFile2Table("~/Dropbox (BBSR)/Aimin_project/Research/DoGs/Counts","*.txt")'
 
 # Step10: Perform differential DoGs analysis
 # In this step, you need to prepare a sample information file to be used as one of input.
 # For the format of this file,you can look up inst/extdata/sample_infor.txt. The first column of this file is sample name, and the second column is group name of all samples belong to
 
-R -e 'library(ChipSeq);library(ThreeUTR);res <- ThreeUTR:::convertCountFile2Table("~/Dropbox (BBSR)/Aimin_project/Research/DoGs/Counts","*.txt");library(org.Hs.eg.db);res.new <- ThreeUTR:::matchAndDE(res,file.path(system.file("extdata",package = "ThreeUTR"),"sample_infor.txt"),group.comparision = c("condition","Untreated","Treated"))'
+R -e 'library(ChipSeq);library(DoGs);res <- DoGs:::convertCountFile2Table("~/Dropbox (BBSR)/Aimin_project/Research/DoGs/Counts","*.txt");library(org.Hs.eg.db);res.new <- DoGs:::matchAndDE(res,file.path(system.file("extdata",package = "DoGs"),"sample_infor.txt"),group.comparision = c("condition","Untreated","Treated"))'
 
 # To run from Step1 to Step10 at one time on cluster
-R -e 'library(ChipSeq);library(ThreeUTR);ThreeUTR:::runDoGsOnCluster("SRP058633",file.path(system.file("extdata",package = "ThreeUTR"),"sample_infor.txt"),"/projects/ctsi/bbc/Genome_Ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.gtf","/projects/ctsi/bbc/Genome_Ref/Homo_sapiens/UCSC/hg19/Sequence/Bowtie2Index/genome","/projects/ctsi/bbc/aimin/annotation/","/scratch/projects/bbc/aiminy_project/DoGs/TestPipeline")'
+R -e 'library(ChipSeq);library(DoGs);DoGs:::runDoGsOnCluster("SRP058633",file.path(system.file("extdata",package = "DoGs"),"sample_infor.txt"),"/projects/ctsi/bbc/Genome_Ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.gtf","/projects/ctsi/bbc/Genome_Ref/Homo_sapiens/UCSC/hg19/Sequence/Bowtie2Index/genome","/projects/ctsi/bbc/aimin/annotation/","/scratch/projects/bbc/aiminy_project/DoGs/TestPipeline")'
 
 # We also supply the small aligned Bam files to let users test DoGs piipeine using the following commands
 
-R -e 'library(ChipSeq);library(ThreeUTR);ThreeUTR:::runDoGsOnClusterStartFromBam(file.path(system.file("extdata",package = "ThreeUTR"),"sample_infor.txt"),"/projects/ctsi/bbc/Genome_Ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.gtf","/projects/ctsi/bbc/Genome_Ref/Homo_sapiens/UCSC/hg19/Sequence/Bowtie2Index/genome","/projects/ctsi/bbc/aimin/annotation/","/scratch/projects/bbc/aiminy_project/DoGs/Example")'
+R -e 'library(ChipSeq);library(DoGs);DoGs:::runDoGsOnClusterStartFromBam(file.path(system.file("extdata",package = "DoGs"),"sample_infor.txt"),"/projects/ctsi/bbc/Genome_Ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.gtf","/projects/ctsi/bbc/Genome_Ref/Homo_sapiens/UCSC/hg19/Sequence/Bowtie2Index/genome","/projects/ctsi/bbc/aimin/annotation/","/scratch/projects/bbc/aiminy_project/DoGs/Example")'
 
 ```
 The following Figure shows differentila DoGs analysis results for two transcripts for CXXC4(shown on the above Figure) under two conditions(KCl-treated and untreated). It is clear that there are differential DoGs in the downstream of CXXC4 gene between two conditions, which is consistent with the above visualization

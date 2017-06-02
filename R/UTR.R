@@ -1577,7 +1577,7 @@ DEAnalysis <- function(countData, wt.index, dox.index)
 #' dir.name <- '/Volumes/Bioinformatics$/Aimin_project/UTR/NewCounts'
 #' input.file.pattern <- 'count.txt'
 #'
-#' res <- ThreeUTR:::getutrcount(dir.name, input.file.pattern,file.path(system.file('extdata',package = 'ThreeUTR'),'sample_infor.txt'))
+#' res <- DoGs:::getutrcount(dir.name, input.file.pattern,file.path(system.file('extdata',package = 'DoGs'),'sample_infor.txt'))
 #'
 getutrcount <- function(dir.name, input.file.pattern, sample.infor.file, group.comparision = c(1,
     2))
@@ -1808,7 +1808,7 @@ getutrcount <- function(dir.name, input.file.pattern, sample.infor.file, group.c
 #'
 #' @examples
 #'
-#' y <- ThreeUTR:::annotatetranscript(res$reBR)
+#' y <- DoGs:::annotatetranscript(res$reBR)
 #'
 annotatetranscript <- function(res)
 {
@@ -2038,7 +2038,7 @@ idtransform <- function(values_to_be_transforemd)
 #' @examples
 #' input.file <- '/Volumes/Bioinformatics$/Zhen-Gao/UTR/Gencode-3UTR-transcript.tsv'
 #' output.file <- '/Volumes/Bioinformatics$/Zhen-Gao/UTR/Gencode-3UTR-transcript-transformed.tsv'
-#' ThreeUTR:::gaoidtransform(input.file,output.file)
+#' DoGs:::gaoidtransform(input.file,output.file)
 #'
 gaoidtransform <- function(input.file, output.file)
 {
@@ -2048,7 +2048,7 @@ gaoidtransform <- function(input.file, output.file)
 
     # head(res)
 
-    y <- ThreeUTR:::idtransform(res$ucsc)
+    y <- DoGs:::idtransform(res$ucsc)
 
     yy <- merge(res, y, by = "ucsc")
     write.table(yy, file = output.file, append = FALSE, quote = FALSE, sep = "\t",
@@ -2554,7 +2554,7 @@ parserreadfiles <- function(input.file.dir, input.file.type, sample.group = NULL
     }
 
     # pkg.env <- new.env(parent = emptyenv()) pkg.env$sample <-
-    # ThreeUTR:::parsersample()
+    # DoGs:::parsersample()
 
     return(re2)
 
@@ -2562,9 +2562,9 @@ parserreadfiles <- function(input.file.dir, input.file.type, sample.group = NULL
 }
 
 #' Example:
-#' R -e 'library(ChipSeq);library(ThreeUTR);re <- ThreeUTR:::useWget2Download("SRP058633","/nethome/axy148/DoGsExample")'
+#' R -e 'library(ChipSeq);library(DoGs);re <- DoGs:::useWget2Download("SRP058633","/nethome/axy148/DoGsExample")'
 #'
-#'re <- ThreeUTR:::useWget2Download("SRP058633","/nethome/axy148/DoGsExample")
+#'re <- DoGs:::useWget2Download("SRP058633","/nethome/axy148/DoGsExample")
 #'
 useWget2Download <- function(sra.accession.number, output.dir)
 {
@@ -2605,11 +2605,11 @@ useFastqDump <- function(sra.accession.number, output.dir)
 
 #'Example
 #'
-#'R -e 'library(ChipSeq);library(ThreeUTR);re <- ThreeUTR:::useFastqDumpConvertSra2Fastq("/nethome/axy148/DoGsExample","/scratch/projects/bbc/aiminy_project/DoGsFastq")'
+#'R -e 'library(ChipSeq);library(DoGs);re <- DoGs:::useFastqDumpConvertSra2Fastq("/nethome/axy148/DoGsExample","/scratch/projects/bbc/aiminy_project/DoGsFastq")'
 #'
 #'On pegasus, you need to run this if you want to start conversion automatically after downloading using wget
 #'
-#'R -e 'library(ChipSeq);library(ThreeUTR);re <- ThreeUTR:::useFastqDumpConvertSra2Fastq("/nethome/axy148/DoGsExample","/scratch/projects/bbc/aiminy_project/DoGsFastq",wait.job.name = "wgetDownload")'
+#'R -e 'library(ChipSeq);library(DoGs);re <- DoGs:::useFastqDumpConvertSra2Fastq("/nethome/axy148/DoGsExample","/scratch/projects/bbc/aiminy_project/DoGsFastq",wait.job.name = "wgetDownload")'
 #'
 useFastqDumpConvertSra2Fastq <- function(sra.file.dir, output.dir,wait.job.name=NULL)
 {
@@ -2717,7 +2717,7 @@ useInferExperiment <- function(input.file.dir, ref.gene.bed.file, output.dir)
 #' res <- convertbam2bed(input.bamfile.dir,output.bedfile.dir)
 #'
 #'
-#'R -e 'library(ChipSeq);library(ThreeUTR);re <- ThreeUTR:::convertbam2bed('/scratch/projects/bbc/aiminy_project/DoGs/BAM','/scratch/projects/bbc/aiminy_project/DoGs')'
+#'R -e 'library(ChipSeq);library(DoGs);re <- DoGs:::convertbam2bed('/scratch/projects/bbc/aiminy_project/DoGs/BAM','/scratch/projects/bbc/aiminy_project/DoGs')'
 #'
 convertbam2bed <- function(input.bamfile.dir, output.bedfile.dir)
 {
@@ -3008,7 +3008,7 @@ getcountsfromMatchedbed <- function(input.bedfile.dir, output.count.file.dir,
 #'
 #' getcounts()
 #'
-#'R -e 'library(ChipSeq);library(ThreeUTR);re <- ThreeUTR:::getcounts('/scratch/projects/bbc/aiminy_project/DoGs/BAM','/projects/ctsi/bbc/aimin/annotation/hg19_DoGs_2.bed',0,0,'/scratch/projects/bbc/aiminy_project/DoGs')'
+#'R -e 'library(ChipSeq);library(DoGs);re <- DoGs:::getcounts('/scratch/projects/bbc/aiminy_project/DoGs/BAM','/projects/ctsi/bbc/aimin/annotation/hg19_DoGs_2.bed',0,0,'/scratch/projects/bbc/aiminy_project/DoGs')'
 #'
 getcounts <- function(input.bamfile.dir, annotation.bed.file, ld, rd, output.count.file.dir,
     filter.sample)
@@ -3234,7 +3234,7 @@ convertBam2Bw <- function(input.bam.file.dir, input.chromosome.size.file, output
 }
 
 #' @examples
-#' R -e 'library(ChipSeq);library(ThreeUTR);ThreeUTR:::convertBam2StrandBw('/scratch/projects/bbc/aiminy_project/DoGs/BAM','/nethome/axy148/hg19.genome','/scratch/projects/bbc/aiminy_project/DoGs/BW2')'
+#' R -e 'library(ChipSeq);library(DoGs);DoGs:::convertBam2StrandBw('/scratch/projects/bbc/aiminy_project/DoGs/BAM','/nethome/axy148/hg19.genome','/scratch/projects/bbc/aiminy_project/DoGs/BW2')'
 #'
 convertBam2StrandBw <- function(input.bam.file.dir, input.chromosome.size.file,
     output.bw.file.dir)
@@ -3545,7 +3545,7 @@ convertBam2StrandBw <- function(input.bam.file.dir, input.chromosome.size.file,
 }
 
 # HCI-Scripts/BamFile/split_bam_by_isize.pl
-#'R -e 'library(ChipSeq);library(ThreeUTR);ThreeUTR:::splitBam('/scratch/projects/bbc/aiminy_project/DoGs/BAM','/scratch/projects/bbc/aiminy_project/DoGs/Bam_split')'
+#'R -e 'library(ChipSeq);library(DoGs);DoGs:::splitBam('/scratch/projects/bbc/aiminy_project/DoGs/BAM','/scratch/projects/bbc/aiminy_project/DoGs/Bam_split')'
 #'
 splitBam <- function(input.bam.file.dir, output.bw.file.dir)
 {
@@ -3619,7 +3619,7 @@ splitBam <- function(input.bam.file.dir, output.bw.file.dir)
 
 }
 
-#'R -e 'library(ChipSeq);library(ThreeUTR);ThreeUTR:::convertBam2StrandBw2('/scratch/projects/bbc/aiminy_project/DoGs/Bam_split/','/scratch/projects/bbc/aiminy_project/DoGs/BW_split')'
+#'R -e 'library(ChipSeq);library(DoGs);DoGs:::convertBam2StrandBw2('/scratch/projects/bbc/aiminy_project/DoGs/Bam_split/','/scratch/projects/bbc/aiminy_project/DoGs/BW_split')'
 #'
 
 convertBam2StrandBw2 <- function(input.bam.file.dir, output.bw.file.dir)
@@ -3683,7 +3683,7 @@ convertBam2StrandBw2 <- function(input.bam.file.dir, output.bw.file.dir)
 
 }
 
-#'R -e 'library(ChipSeq);library(ThreeUTR);ThreeUTR:::convertBam2bed2('/scratch/projects/bbc/aiminy_project/DoGs/BAM','/scratch/projects/bbc/aiminy_project/DoGs/BED2')'
+#'R -e 'library(ChipSeq);library(DoGs);DoGs:::convertBam2bed2('/scratch/projects/bbc/aiminy_project/DoGs/BAM','/scratch/projects/bbc/aiminy_project/DoGs/BED2')'
 #'
 
 convertBam2bed2 <- function(input.bam.file.dir, output.bed.file.dir)
@@ -3731,10 +3731,10 @@ convertBam2bed2 <- function(input.bam.file.dir, output.bed.file.dir)
 
 #'bedtools intersect -v -a 'Results/''Aligned'.bed -b /media/H_driver/2016/Ramin_azhang/Annotation/exons.bed /media/H_driver/2016/Ramin_azhang/Annotation/intron.bed
 
-#'R -e 'library(ChipSeq);library(ThreeUTR);ThreeUTR:::removeReadsOnExonIntron("/scratch/projects/bbc/aiminy_project/DoGs/BED2","/projects/ctsi/bbc/aimin/annotation/","/scratch/projects/bbc/aiminy_project/DoGs/BedRmExonIntron")'
+#'R -e 'library(ChipSeq);library(DoGs);DoGs:::removeReadsOnExonIntron("/scratch/projects/bbc/aiminy_project/DoGs/BED2","/projects/ctsi/bbc/aimin/annotation/","/scratch/projects/bbc/aiminy_project/DoGs/BedRmExonIntron")'
 #'
 #'
-#'R -e 'library(ChipSeq);library(ThreeUTR);ThreeUTR:::removeReadsOnExonIntron("/scratch/projects/bbc/aiminy_project/DoGs/BedFileFromBam","/projects/ctsi/bbc/aimin/annotation/","/scratch/projects/bbc/aiminy_project/DoGs/BedRmExonIntron")'
+#'R -e 'library(ChipSeq);library(DoGs);DoGs:::removeReadsOnExonIntron("/scratch/projects/bbc/aiminy_project/DoGs/BedFileFromBam","/projects/ctsi/bbc/aimin/annotation/","/scratch/projects/bbc/aiminy_project/DoGs/BedRmExonIntron")'
 #'
 removeReadsOnExonIntron <- function(input.bed.file.dir, annotation.bed.file.dir,
     output.bed.file.dir)
@@ -3788,7 +3788,7 @@ removeReadsOnExonIntron <- function(input.bed.file.dir, annotation.bed.file.dir,
 
 #'bedtools window -a /media/H_driver/2016/Ramin_azhang/Annotation/hg19_gene.bed -b "/media/H_driver/2016/Ramin_azhang/for_bioinfo_core/RNA_seq/Results4NewData/""2016-02-10-emp1_WT".rm.exon.intron.hg19.bed -l 0 -r 4500 -sw   >
 
-#'R -e 'library(ChipSeq);library(ThreeUTR);ThreeUTR:::getCount4Downstream(""/scratch/projects/bbc/aiminy_project/DoGs/BedRmExonIntron","/projects/ctsi/bbc/aimin/annotation/","/scratch/projects/bbc/aiminy_project/DoGs/Counts45KB")'
+#'R -e 'library(ChipSeq);library(DoGs);DoGs:::getCount4Downstream(""/scratch/projects/bbc/aiminy_project/DoGs/BedRmExonIntron","/projects/ctsi/bbc/aimin/annotation/","/scratch/projects/bbc/aiminy_project/DoGs/Counts45KB")'
 #'
 getCount4Downstream <- function(input.bed.file.dir, annotation.bed.file.dir,
                                       output.count.file.dir)
@@ -3881,9 +3881,9 @@ convertCountFile2Table <- function(input.count.file.dir,input.file.pattern)
 
 #' res <- convertCountFile2Table("~/Dropbox (BBSR)/Aimin_project/Research/DoGs/Counts","*.txt")
 
-#' res.new <- ThreeUTR:::matchAndDE(res,file.path(system.file("extdata",package = "ThreeUTR"),"sample_infor.txt"),group.comparision = c("condition","Untreated","Treated"))
+#' res.new <- DoGs:::matchAndDE(res,file.path(system.file("extdata",package = "DoGs"),"sample_infor.txt"),group.comparision = c("condition","Untreated","Treated"))
 #'
-#' res.new <- ThreeUTR:::matchAndDE(res,file.path(system.file("extdata",package = "ThreeUTR"),"sample_infor.txt"),group.comparision = c("condition","Treated","Untreated"))
+#' res.new <- DoGs:::matchAndDE(res,file.path(system.file("extdata",package = "DoGs"),"sample_infor.txt"),group.comparision = c("condition","Treated","Untreated"))
 #'
 matchAndDE <- function(res,sample.infor.file,group.comparision = c("condition","Untreated","Treated"))
 {
@@ -3957,9 +3957,9 @@ matchAndDE <- function(res,sample.infor.file,group.comparision = c("condition","
 
 
 #' library(org.Hs.eg.db)
-#' res12 <- ThreeUTR:::sumCount4Downstream("~/Dropbox (BBSR)/Aimin_project/Research/DoGs/Counts","*.txt",file.path(system.file("extdata",package = "ThreeUTR"),"sample_infor.txt"),c(1,2))
+#' res12 <- DoGs:::sumCount4Downstream("~/Dropbox (BBSR)/Aimin_project/Research/DoGs/Counts","*.txt",file.path(system.file("extdata",package = "DoGs"),"sample_infor.txt"),c(1,2))
 
-#'res21 <- ThreeUTR:::sumCount4Downstream("~/Dropbox (BBSR)/Aimin_project/Research/DoGs/Counts","*.txt",file.path(system.file("extdata",package = "ThreeUTR"),"sample_infor.txt"),c(2,1))
+#'res21 <- DoGs:::sumCount4Downstream("~/Dropbox (BBSR)/Aimin_project/Research/DoGs/Counts","*.txt",file.path(system.file("extdata",package = "DoGs"),"sample_infor.txt"),c(2,1))
 #'
 sumCount4Downstream <- function(input.count.file.dir,input.file.pattern,sample.infor.file,group.comparision = c("condition",1,2))
 {
@@ -4147,9 +4147,9 @@ select3UTR <- function(genome, tablename)
     library(GenomicFeatures)
     library(dplyr)
     refSeq <- makeTxDbFromUCSC(genome = "hg19", tablename = "knownGene")
-    threeUTRs <- threeUTRsByTranscript(refSeq, use.names = TRUE)
-    length_threeUTRs <- width(ranges(threeUTRs))
-    the_lengths <- as.data.frame(length_threeUTRs)
+    DoGss <- DoGssByTranscript(refSeq, use.names = TRUE)
+    length_DoGss <- width(ranges(DoGss))
+    the_lengths <- as.data.frame(length_DoGss)
     the_lengths <- the_lengths %>% group_by(group, group_name) %>% summarise(sum(value))
     the_lengths <- unique(the_lengths[, c("group_name", "sum(value)")])
     colnames(the_lengths) <- c("RefSeq Transcript", "3' UTR Length")
@@ -4228,7 +4228,7 @@ checkStrand <- function(input.alignment.dir)
 }
 
 #' @examples
-#' R -e 'library(ThreeUTR);ThreeUTR:::processBamFiles('/scratch/projects/bbc/aiminy_project/DoGs_AlignmentBamTophatGeneral2','/scratch/projects/bbc/aiminy_project/DoGs/BAM')'
+#' R -e 'library(DoGs);DoGs:::processBamFiles('/scratch/projects/bbc/aiminy_project/DoGs_AlignmentBamTophatGeneral2','/scratch/projects/bbc/aiminy_project/DoGs/BAM')'
 #'
 processBamFiles <- function(input.alignment.dir, output.dir)
 {
@@ -4466,7 +4466,7 @@ testAlignment <- function(output.dir, gene.model.file, genome.index)
     }
 }
 
-#'ThreeUTR:::useTophat4Alignment("/scratch/projects/bbc/aiminy_project/DoGsFastq","/scratch/projects/bbc/aiminy_project/DoGs_AlignmentBamTophatGeneral2","/projects/ctsi/bbc/Genome_Ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.gtf","/projects/ctsi/bbc/Genome_Ref/Homo_sapiens/UCSC/hg19/Sequence/Bowtie2Index/genome","General")
+#'DoGs:::useTophat4Alignment("/scratch/projects/bbc/aiminy_project/DoGsFastq","/scratch/projects/bbc/aiminy_project/DoGs_AlignmentBamTophatGeneral2","/projects/ctsi/bbc/Genome_Ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.gtf","/projects/ctsi/bbc/Genome_Ref/Homo_sapiens/UCSC/hg19/Sequence/Bowtie2Index/genome","General")
 #'
 useTophat4Alignment <- function(input.fastq.files.dir, output.dir, gene.model.file = NULL,
     genome.index, cmd.input)
@@ -4583,7 +4583,7 @@ useTophat4Alignment <- function(input.fastq.files.dir, output.dir, gene.model.fi
 }
 
 #' @examples
-#' R -e 'library(ThreeUTR);ThreeUTR:::subsetBam('/scratch/projects/bbc/aiminy_project/DoGs/Bam_split/','$HOME/1833_common_gene.bed','/scratch/projects/bbc/aiminy_project/DoGs/BAMSubSet',BigMem=FALSE)'
+#' R -e 'library(DoGs);DoGs:::subsetBam('/scratch/projects/bbc/aiminy_project/DoGs/Bam_split/','$HOME/1833_common_gene.bed','/scratch/projects/bbc/aiminy_project/DoGs/BAMSubSet',BigMem=FALSE)'
 #'
 subsetBam <- function(input.bam.file.dir, region.bed.file, output.bw.file.dir,
     BigMem = FALSE)
@@ -4727,7 +4727,7 @@ filterByRmNull <- function(a.list)
    return(a.list.2)
 }
 
-# Rfun <- 'library(ChipSeq);library(ThreeUTR);re <- ThreeUTR:::useFastqDumpConvertSra2Fastq("/nethome/axy148/DoGsExample","/scratch/projects/bbc/aiminy_project/DoGsFastq",wait.job.name = "wgetDownload")'
+# Rfun <- 'library(ChipSeq);library(DoGs);re <- DoGs:::useFastqDumpConvertSra2Fastq("/nethome/axy148/DoGsExample","/scratch/projects/bbc/aiminy_project/DoGsFastq",wait.job.name = "wgetDownload")'
 
 createBubRfun <- function(Rfun,job.name,wait.job.name){
   x <- ChipSeq:::usePegasus("parallel","72:00",16,25000,8,job.name,wait.job.name)
@@ -4741,13 +4741,13 @@ createBubRfun <- function(Rfun,job.name,wait.job.name){
 
 
 
-#' R -e 'library(ChipSeq);library(ThreeUTR);ThreeUTR:::useTophat4Alignment2("/scratch/projects/bbc/aiminy_project/DoGsFastq","/scratch/projects/bbc/aiminy_project/DoGs_AlignmentBamTophatGeneral2","/projects/ctsi/bbc/Genome_Ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.gtf","/projects/ctsi/bbc/Genome_Ref/Homo_sapiens/UCSC/hg19/Sequence/Bowtie2Index/genome","General","sra2fastq")'
+#' R -e 'library(ChipSeq);library(DoGs);DoGs:::useTophat4Alignment2("/scratch/projects/bbc/aiminy_project/DoGsFastq","/scratch/projects/bbc/aiminy_project/DoGs_AlignmentBamTophatGeneral2","/projects/ctsi/bbc/Genome_Ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.gtf","/projects/ctsi/bbc/Genome_Ref/Homo_sapiens/UCSC/hg19/Sequence/Bowtie2Index/genome","General","sra2fastq")'
 
 #' On pegasus
 #'
-#'bsub -P bbc -J "alignment[1-8]" -o %J.alignment.%I -e %J.alignment.%I -W 72:00 -n 16 -q parallel -R 'rusage[mem= 25000 ] span[ptile= 8 ]' -u aimin.yan@med.miami.edu "R -e 'library(ChipSeq);library(ThreeUTR);ThreeUTR:::useTophat4Alignment2(\"/scratch/projects/bbc/aiminy_project/DoGsFastq\",\"/scratch/projects/bbc/aiminy_project/DoGs_AlignmentBamTophatGeneral2\",\"/projects/ctsi/bbc/Genome_Ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.gtf\",\"/projects/ctsi/bbc/Genome_Ref/Homo_sapiens/UCSC/hg19/Sequence/Bowtie2Index/genome\",\"General\")'"
+#'bsub -P bbc -J "alignment[1-8]" -o %J.alignment.%I -e %J.alignment.%I -W 72:00 -n 16 -q parallel -R 'rusage[mem= 25000 ] span[ptile= 8 ]' -u aimin.yan@med.miami.edu "R -e 'library(ChipSeq);library(DoGs);DoGs:::useTophat4Alignment2(\"/scratch/projects/bbc/aiminy_project/DoGsFastq\",\"/scratch/projects/bbc/aiminy_project/DoGs_AlignmentBamTophatGeneral2\",\"/projects/ctsi/bbc/Genome_Ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.gtf\",\"/projects/ctsi/bbc/Genome_Ref/Homo_sapiens/UCSC/hg19/Sequence/Bowtie2Index/genome\",\"General\")'"
 #'
-#'bsub -P bbc -J "alignment" -o %J.alignment.log -e %J.alignment.err -W 72:00 -n 16 -q parallel -R 'rusage[mem= 25000 ] span[ptile= 8 ]' -u aimin.yan@med.miami.edu "R -e 'library(ChipSeq);library(ThreeUTR);ThreeUTR:::useTophat4Alignment2(\"/scratch/projects/bbc/aiminy_project/DoGsFastq\",\"/scratch/projects/bbc/aiminy_project/DoGs_AlignmentBamTophatGeneral2\",\"/projects/ctsi/bbc/Genome_Ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.gtf\",\"/projects/ctsi/bbc/Genome_Ref/Homo_sapiens/UCSC/hg19/Sequence/Bowtie2Index/genome\")'"
+#'bsub -P bbc -J "alignment" -o %J.alignment.log -e %J.alignment.err -W 72:00 -n 16 -q parallel -R 'rusage[mem= 25000 ] span[ptile= 8 ]' -u aimin.yan@med.miami.edu "R -e 'library(ChipSeq);library(DoGs);DoGs:::useTophat4Alignment2(\"/scratch/projects/bbc/aiminy_project/DoGsFastq\",\"/scratch/projects/bbc/aiminy_project/DoGs_AlignmentBamTophatGeneral2\",\"/projects/ctsi/bbc/Genome_Ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.gtf\",\"/projects/ctsi/bbc/Genome_Ref/Homo_sapiens/UCSC/hg19/Sequence/Bowtie2Index/genome\")'"
 #'
 #'
 #'
@@ -4887,7 +4887,7 @@ useTophat4Alignment2 <- function(input.fastq.files.dir, output.dir, gene.model.f
 
 }
 
-#' bsub -P bbc -J "alignment[1-8]" -o %J.alignment.%I.log -e %J.alignment.%I.err -W 72:00 -n 16 -q parallel -R 'rusage[mem= 25000 ] span[ptile= 8 ]' -u aimin.yan@med.miami.edu "R -e 'library(ChipSeq);library(ThreeUTR);ThreeUTR:::alignmentUseJobArray(\"/scratch/projects/bbc/aiminy_project/DoGsFastq\",\"/scratch/projects/bbc/aiminy_project/DoGs_AlignmentBamTophatGeneral2\",\"/projects/ctsi/bbc/Genome_Ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.gtf\",\"/projects/ctsi/bbc/Genome_Ref/Homo_sapiens/UCSC/hg19/Sequence/Bowtie2Index/genome\")'"
+#' bsub -P bbc -J "alignment[1-8]" -o %J.alignment.%I.log -e %J.alignment.%I.err -W 72:00 -n 16 -q parallel -R 'rusage[mem= 25000 ] span[ptile= 8 ]' -u aimin.yan@med.miami.edu "R -e 'library(ChipSeq);library(DoGs);DoGs:::alignmentUseJobArray(\"/scratch/projects/bbc/aiminy_project/DoGsFastq\",\"/scratch/projects/bbc/aiminy_project/DoGs_AlignmentBamTophatGeneral2\",\"/projects/ctsi/bbc/Genome_Ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.gtf\",\"/projects/ctsi/bbc/Genome_Ref/Homo_sapiens/UCSC/hg19/Sequence/Bowtie2Index/genome\")'"
 
 alignmentUseJobArray <- function(input.fastq.files.dir, output.dir, gene.model.file = NULL,
                                  genome.index, cmd.input="parallel",wait.job.name=NULL)
@@ -5385,7 +5385,7 @@ CountAndDE <- function(output.count.dir,sample.info.file,output.res.dir) {
     dir.create(output.res.dir, recursive = TRUE)
   }
 
-  x <- read.table(file.path(system.file("extdata",package = "ThreeUTR"),"sample_infor.txt"),header = TRUE)
+  x <- read.table(file.path(system.file("extdata",package = "DoGs"),"sample_infor.txt"),header = TRUE)
 
   g.1 <- colnames(x)[2]
   g.2 <- unique(as.character(x[,2]))[2]
@@ -5393,7 +5393,7 @@ CountAndDE <- function(output.count.dir,sample.info.file,output.res.dir) {
 
   res <- convertCountFile2Table(output.count.dir,"*.txt")
 
-  res.new <- ThreeUTR:::matchAndDE(res,sample.info.file,group.comparision = c(g.1,g.2,g.3))
+  res.new <- DoGs:::matchAndDE(res,sample.info.file,group.comparision = c(g.1,g.2,g.3))
 
   sumResult(res.new,output.res.dir)
 
@@ -5403,14 +5403,14 @@ CountAndDE <- function(output.count.dir,sample.info.file,output.res.dir) {
 
 }
 
-#' res <- ThreeUTR:::convertCountFile2Table("~/Dropbox (BBSR)/Aimin_project/Research/DoGs/Counts","*.txt")
+#' res <- DoGs:::convertCountFile2Table("~/Dropbox (BBSR)/Aimin_project/Research/DoGs/Counts","*.txt")
 
 #' library(org.Hs.eg.db)
-#' res <- ThreeUTR:::CountAndDE("~/Dropbox (BBSR)/Aimin_project/Research/DoGs/Counts",file.path(system.file("extdata", package = "ThreeUTR"),"sample_infor.txt"),"~/Dropbox (BBSR)/Aimin_project/Research/DoGs/Results")
+#' res <- DoGs:::CountAndDE("~/Dropbox (BBSR)/Aimin_project/Research/DoGs/Counts",file.path(system.file("extdata", package = "DoGs"),"sample_infor.txt"),"~/Dropbox (BBSR)/Aimin_project/Research/DoGs/Results")
 
 #' output.res.dir <- "~/Dropbox (BBSR)/Aimin_project/Research/DoGs/Results"
 #'
-#' res.sum <- ThreeUTR:::sumResult(res,"~/Dropbox (BBSR)/Aimin_project/Research/DoGs/Results")
+#' res.sum <- DoGs:::sumResult(res,"~/Dropbox (BBSR)/Aimin_project/Research/DoGs/Results")
 #'
 sumResult <-function(res,output.res.dir){
 
@@ -5584,7 +5584,7 @@ processSpliceJunctionFilesUseJobArray <- function(input.alignment.dir, output.di
   cat(cmd,"\n\n")
 }
 
-#' res.sum <- ThreeUTR:::generateSmallBedFile(res,strand.specific=TRUE,"~/Dropbox (BBSR)/Aimin_project/Research/DoGs/SmallExample")
+#' res.sum <- DoGs:::generateSmallBedFile(res,strand.specific=TRUE,"~/Dropbox (BBSR)/Aimin_project/Research/DoGs/SmallExample")
 #'
 generateSmallBedFile <- function(res,strand.specific=FALSE,output.res.dir){
 

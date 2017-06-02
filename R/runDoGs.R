@@ -1,7 +1,7 @@
-#' R -e 'library(ChipSeq);library(ThreeUTR);ThreeUTR:::runDoGs("SRP058633",file.path(system.file("extdata",package = "ThreeUTR"),"sample_infor.txt"),"/projects/ctsi/bbc/Genome_Ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.gtf","/projects/ctsi/bbc/Genome_Ref/Homo_sapiens/UCSC/hg19/Sequence/Bowtie2Index/genome","/projects/ctsi/bbc/aimin/annotation/","/scratch/projects/bbc/aiminy_project/DoGs/TestPipeline")'
+#' R -e 'library(ChipSeq);library(DoGs);DoGs:::runDoGs("SRP058633",file.path(system.file("extdata",package = "DoGs"),"sample_infor.txt"),"/projects/ctsi/bbc/Genome_Ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.gtf","/projects/ctsi/bbc/Genome_Ref/Homo_sapiens/UCSC/hg19/Sequence/Bowtie2Index/genome","/projects/ctsi/bbc/aimin/annotation/","/scratch/projects/bbc/aiminy_project/DoGs/TestPipeline")'
 #'
 #'
-#' sample.info.file=file.path(system.file("extdata",package = "ThreeUTR"),"sample_infor.txt")
+#' sample.info.file=file.path(system.file("extdata",package = "DoGs"),"sample_infor.txt")
 #' gene.gtf="/projects/ctsi/bbc/Genome_Ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.gtf"
 #' genome.index="/projects/ctsi/bbc/Genome_Ref/Homo_sapiens/UCSC/hg19/Sequence/Bowtie2Index/genome"
 #' processed.gene.gtf="/projects/ctsi/bbc/aimin/annotation/"
@@ -15,10 +15,10 @@ runDoGs <- function(sra.accession.number,sample.info.file,gene.gtf,genome.index,
     dir.create(output.dir, recursive = TRUE)
   }
 
-# re <- ThreeUTR:::useWget2Download(sra.accession.number,file.path(output.dir,"SRAFiles"))
+# re <- DoGs:::useWget2Download(sra.accession.number,file.path(output.dir,"SRAFiles"))
 #
 # # This setting works
-# Rfun1 <- 'library(ChipSeq);library(ThreeUTR);re <- ThreeUTR:::useFastqDumpConvertSra2Fastq('
+# Rfun1 <- 'library(ChipSeq);library(DoGs);re <- DoGs:::useFastqDumpConvertSra2Fastq('
 # input=file.path(output.dir,"SRAFiles")
 # output=file.path(output.dir,"Fastqfiles")
 # Rfun2 <- ',wait.job.name = "wgetDownload")'
@@ -27,7 +27,7 @@ runDoGs <- function(sra.accession.number,sample.info.file,gene.gtf,genome.index,
 # run1 <- createBubRfun(Rfun3,"sra2fastq","wgetDownload")
 # system(run1)
 
-Rfun1 <- 'library(ChipSeq);library(ThreeUTR);re <- ThreeUTR:::useTophat4Alignment2('
+Rfun1 <- 'library(ChipSeq);library(DoGs);re <- DoGs:::useTophat4Alignment2('
 input=file.path(output.dir,"Fastqfiles")
 output=file.path(output.dir,"Alignment")
 gene.gtf=gene.gtf
@@ -53,11 +53,11 @@ system(test)
 #
 # res <- convertCountFile2Table(file.path(output.dir,"Counts"),"*.txt",wait.job.name="sra2fastq")
 #
-# res.new <- ThreeUTR:::matchAndDE(res,sample.info.file,group.comparision = c("condition","Untreated","Treated"),wait.job.name="sra2fastq")
+# res.new <- DoGs:::matchAndDE(res,sample.info.file,group.comparision = c("condition","Untreated","Treated"),wait.job.name="sra2fastq")
 
 }
 
-#' R -e 'library(ChipSeq);library(ThreeUTR);ThreeUTR:::runDoGsOnCluster("SRP058633",file.path(system.file("extdata",package = "ThreeUTR"),"sample_infor.txt"),"/projects/ctsi/bbc/Genome_Ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.gtf","/projects/ctsi/bbc/Genome_Ref/Homo_sapiens/UCSC/hg19/Sequence/Bowtie2Index/genome","/projects/ctsi/bbc/aimin/annotation/","/scratch/projects/bbc/aiminy_project/DoGs/TestPipeline")'
+#' R -e 'library(ChipSeq);library(DoGs);DoGs:::runDoGsOnCluster("SRP058633",file.path(system.file("extdata",package = "DoGs"),"sample_infor.txt"),"/projects/ctsi/bbc/Genome_Ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.gtf","/projects/ctsi/bbc/Genome_Ref/Homo_sapiens/UCSC/hg19/Sequence/Bowtie2Index/genome","/projects/ctsi/bbc/aimin/annotation/","/scratch/projects/bbc/aiminy_project/DoGs/TestPipeline")'
 
 runDoGsOnCluster <- function(sra.accession.number,sample.info.file,gene.gtf,genome.index,processed.gene.gtf,output.dir) {
 
@@ -66,10 +66,10 @@ runDoGsOnCluster <- function(sra.accession.number,sample.info.file,gene.gtf,geno
     dir.create(output.dir, recursive = TRUE)
   }
 
-  re <- ThreeUTR:::useWget2Download(sra.accession.number,file.path(output.dir,"SRAFiles"))
+  re <- DoGs:::useWget2Download(sra.accession.number,file.path(output.dir,"SRAFiles"))
 
   # This setting works
-  Rfun1 <- 'library(ChipSeq);library(ThreeUTR);re <- ThreeUTR:::convertSra2FastqUseJobArray('
+  Rfun1 <- 'library(ChipSeq);library(DoGs);re <- DoGs:::convertSra2FastqUseJobArray('
   input=file.path(output.dir,"SRAFiles")
   output=file.path(output.dir,"Fastqfiles")
   Rfun2 <- ')'
@@ -78,7 +78,7 @@ runDoGsOnCluster <- function(sra.accession.number,sample.info.file,gene.gtf,geno
   sra2fastq <- createBsubJobArrayRfun(Rfun3,"sra2fastq[1-8]","wgetDownload")
   system(sra2fastq)
 
-  Rfun1 <- 'library(ChipSeq);library(ThreeUTR);re <- ThreeUTR:::alignmentUseJobArray('
+  Rfun1 <- 'library(ChipSeq);library(DoGs);re <- DoGs:::alignmentUseJobArray('
   input=file.path(output.dir,"Fastqfiles")
   output=file.path(output.dir,"Alignment")
   gene.gtf=gene.gtf
@@ -92,7 +92,7 @@ runDoGsOnCluster <- function(sra.accession.number,sample.info.file,gene.gtf,geno
   alignment <- createBsubJobArrayRfun(Rfun,"Alignment[1-8]","sra2fastq")
   system(alignment)
 
-  Rfun1 <- 'library(ChipSeq);library(ThreeUTR);re <- ThreeUTR:::processBamFilesUseJobArray('
+  Rfun1 <- 'library(ChipSeq);library(DoGs);re <- DoGs:::processBamFilesUseJobArray('
   input=file.path(output.dir,"Alignment")
   output=file.path(output.dir,"Bam")
   #gene.gtf=gene.gtf
@@ -106,7 +106,7 @@ runDoGsOnCluster <- function(sra.accession.number,sample.info.file,gene.gtf,geno
   processbam <- createBsubJobArrayRfun(Rfun,"ProcessBam[1-8]","Alignment")
   system(processbam)
 
-  Rfun1 <- 'library(ChipSeq);library(ThreeUTR);re <- ThreeUTR:::convertBam2bedUsingJobArray('
+  Rfun1 <- 'library(ChipSeq);library(DoGs);re <- DoGs:::convertBam2bedUsingJobArray('
   input=file.path(output.dir,"Bam")
   output=file.path(output.dir,"BedFromBam")
   #gene.gtf=gene.gtf
@@ -120,7 +120,7 @@ runDoGsOnCluster <- function(sra.accession.number,sample.info.file,gene.gtf,geno
   bam2bed <- createBsubJobArrayRfun(Rfun,"Bam2Bed[1-8]","ProcessBam")
   system(bam2bed)
 
-  Rfun1 <- 'library(ChipSeq);library(ThreeUTR);re <- ThreeUTR:::removeReadsOnExonIntronUsingJobArray('
+  Rfun1 <- 'library(ChipSeq);library(DoGs);re <- DoGs:::removeReadsOnExonIntronUsingJobArray('
   input=file.path(output.dir,"BedFromBam")
   processed.gene.gtf=processed.gene.gtf
   output=file.path(output.dir,"BedRmExonIntron")
@@ -137,7 +137,7 @@ runDoGsOnCluster <- function(sra.accession.number,sample.info.file,gene.gtf,geno
   #rm.exon.intron <- createBsubJobArrayRfun(Rfun,"RmExonIntron[1-8]",NULL)
   system(rm.exon.intron)
 
-  Rfun1 <- 'library(ChipSeq);library(ThreeUTR);re <- ThreeUTR:::getCount4DownstreamUsingJobArray('
+  Rfun1 <- 'library(ChipSeq);library(DoGs);re <- DoGs:::getCount4DownstreamUsingJobArray('
   input=file.path(output.dir,"BedRmExonIntron")
   processed.gene.gtf=processed.gene.gtf
   output=file.path(output.dir,"Counts")
@@ -153,7 +153,7 @@ runDoGsOnCluster <- function(sra.accession.number,sample.info.file,gene.gtf,geno
   #counting <- createBsubJobArrayRfun(Rfun,"Count[1-8]",NULL)
   system(counting)
 
-  Rfun1 <- 'library(ChipSeq);library(ThreeUTR);library(org.Hs.eg.db);re <- ThreeUTR:::CountAndDE('
+  Rfun1 <- 'library(ChipSeq);library(DoGs);library(org.Hs.eg.db);re <- DoGs:::CountAndDE('
   input=file.path(output.dir,"Counts")
   #processed.gene.gtf=processed.gene.gtf
   sample.info.file=sample.info.file
@@ -172,11 +172,11 @@ runDoGsOnCluster <- function(sra.accession.number,sample.info.file,gene.gtf,geno
 
 }
 
-#' R -e 'library(ChipSeq);library(ThreeUTR);ThreeUTR:::runSpliceJunction("/scratch/projects/bbc/aiminy_project/DoGs/TestPipeline2")'
+#' R -e 'library(ChipSeq);library(DoGs);DoGs:::runSpliceJunction("/scratch/projects/bbc/aiminy_project/DoGs/TestPipeline2")'
 
 runSpliceJunction <- function(output.dir,wait.job=NULL) {
 
-  Rfun1 <- 'library(ChipSeq);library(ThreeUTR);re <- ThreeUTR:::processSpliceJunctionFilesUseJobArray('
+  Rfun1 <- 'library(ChipSeq);library(DoGs);re <- DoGs:::processSpliceJunctionFilesUseJobArray('
   input=file.path(output.dir,"Alignment")
   output=file.path(output.dir,"SpliceBed")
   #gene.gtf=gene.gtf
@@ -193,10 +193,10 @@ runSpliceJunction <- function(output.dir,wait.job=NULL) {
 
 }
 
-#' R -e 'library(ChipSeq);library(ThreeUTR);ThreeUTR:::runRmExonAndIntronFromSplicingJunctions("/scratch/projects/bbc/aiminy_project/DoGs/TestPipeline2","/projects/ctsi/bbc/aimin/annotation/")'
+#' R -e 'library(ChipSeq);library(DoGs);DoGs:::runRmExonAndIntronFromSplicingJunctions("/scratch/projects/bbc/aiminy_project/DoGs/TestPipeline2","/projects/ctsi/bbc/aimin/annotation/")'
 #'
 runRmExonAndIntronFromSplicingJunctions <- function(output.dir, processed.gene.gtf,wait.job=NULL) {
-  Rfun1 <- 'library(ChipSeq);library(ThreeUTR);re <- ThreeUTR:::removeReadsOnExonIntronUsingJobArray('
+  Rfun1 <- 'library(ChipSeq);library(DoGs);re <- DoGs:::removeReadsOnExonIntronUsingJobArray('
   input=file.path(output.dir,"SpliceBed")
   processed.gene.gtf=processed.gene.gtf
   output=file.path(output.dir,"SpliceBedRmExonIntron")
@@ -210,10 +210,10 @@ runRmExonAndIntronFromSplicingJunctions <- function(output.dir, processed.gene.g
   system(rm.exon.intron)
 }
 
-#' R -e 'library(ChipSeq);library(ThreeUTR);ThreeUTR:::runGenerateSubSetBam("/scratch/projects/bbc/aiminy_project/DoGs/TestPipeline2","/projects/ctsi/bbc/aimin/annotation/")'
+#' R -e 'library(ChipSeq);library(DoGs);DoGs:::runGenerateSubSetBam("/scratch/projects/bbc/aiminy_project/DoGs/TestPipeline2","/projects/ctsi/bbc/aimin/annotation/")'
 #'
 runGenerateSubSetBam <- function(output.dir, processed.gene.gtf,wait.job=NULL) {
-  Rfun1 <- 'library(ChipSeq);library(ThreeUTR);re <- ThreeUTR:::generateSubSetBam('
+  Rfun1 <- 'library(ChipSeq);library(DoGs);re <- DoGs:::generateSubSetBam('
   input=file.path(output.dir,"Bam")
   processed.gene.gtf=processed.gene.gtf
   output=file.path(output.dir,"BamExample")
@@ -229,7 +229,7 @@ runGenerateSubSetBam <- function(output.dir, processed.gene.gtf,wait.job=NULL) {
 
 #' If you already have BAM files available, you can use this function to perform analysis
 #'
-#' R -e 'library(ChipSeq);library(ThreeUTR);ThreeUTR:::runDoGsOnClusterStartFromBam(file.path(system.file("extdata",package = "ThreeUTR"),"sample_infor.txt"),"/projects/ctsi/bbc/Genome_Ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.gtf","/projects/ctsi/bbc/Genome_Ref/Homo_sapiens/UCSC/hg19/Sequence/Bowtie2Index/genome","/projects/ctsi/bbc/aimin/annotation/","/scratch/projects/bbc/aiminy_project/DoGs/Example")'
+#' R -e 'library(ChipSeq);library(DoGs);DoGs:::runDoGsOnClusterStartFromBam(file.path(system.file("extdata",package = "DoGs"),"sample_infor.txt"),"/projects/ctsi/bbc/Genome_Ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.gtf","/projects/ctsi/bbc/Genome_Ref/Homo_sapiens/UCSC/hg19/Sequence/Bowtie2Index/genome","/projects/ctsi/bbc/aimin/annotation/","/scratch/projects/bbc/aiminy_project/DoGs/Example")'
 
 runDoGsOnClusterStartFromBam <- function(sample.info.file,gene.gtf,genome.index,processed.gene.gtf,output.dir) {
 
@@ -238,7 +238,7 @@ runDoGsOnClusterStartFromBam <- function(sample.info.file,gene.gtf,genome.index,
     dir.create(output.dir, recursive = TRUE)
   }
 
-  Rfun1 <- 'library(ChipSeq);library(ThreeUTR);re <- ThreeUTR:::convertBam2bedUsingJobArray('
+  Rfun1 <- 'library(ChipSeq);library(DoGs);re <- DoGs:::convertBam2bedUsingJobArray('
   input=file.path(output.dir,"Bam")
   output=file.path(output.dir,"BedFromBam")
   #gene.gtf=gene.gtf
@@ -255,7 +255,7 @@ runDoGsOnClusterStartFromBam <- function(sample.info.file,gene.gtf,genome.index,
 
   system(bam2bed)
 
-  Rfun1 <- 'library(ChipSeq);library(ThreeUTR);re <- ThreeUTR:::removeReadsOnExonIntronUsingJobArray('
+  Rfun1 <- 'library(ChipSeq);library(DoGs);re <- DoGs:::removeReadsOnExonIntronUsingJobArray('
   input=file.path(output.dir,"BedFromBam")
   processed.gene.gtf=processed.gene.gtf
   output=file.path(output.dir,"BedRmExonIntron")
@@ -272,7 +272,7 @@ runDoGsOnClusterStartFromBam <- function(sample.info.file,gene.gtf,genome.index,
   #rm.exon.intron <- createBsubJobArrayRfun(Rfun,"RmExonIntron[1-8]",NULL)
   system(rm.exon.intron)
 
-  Rfun1 <- 'library(ChipSeq);library(ThreeUTR);re <- ThreeUTR:::getCount4DownstreamUsingJobArray('
+  Rfun1 <- 'library(ChipSeq);library(DoGs);re <- DoGs:::getCount4DownstreamUsingJobArray('
   input=file.path(output.dir,"BedRmExonIntron")
   processed.gene.gtf=processed.gene.gtf
   output=file.path(output.dir,"Counts")
@@ -288,7 +288,7 @@ runDoGsOnClusterStartFromBam <- function(sample.info.file,gene.gtf,genome.index,
   #counting <- createBsubJobArrayRfun(Rfun,"Count[1-8]",NULL)
   system(counting)
 
-  Rfun1 <- 'library(ChipSeq);library(ThreeUTR);library(org.Hs.eg.db);re <- ThreeUTR:::CountAndDE('
+  Rfun1 <- 'library(ChipSeq);library(DoGs);library(org.Hs.eg.db);re <- DoGs:::CountAndDE('
   input=file.path(output.dir,"Counts")
   #processed.gene.gtf=processed.gene.gtf
   sample.info.file=sample.info.file
