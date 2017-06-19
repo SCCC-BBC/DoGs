@@ -3840,7 +3840,7 @@ getCount4Downstream <- function(input.bed.file.dir, annotation.bed.file.dir,
 
   }
 
-#' res <- convertCountFile2Table("~/Dropbox (BBSR)/Aimin_project/Research/DoGs/Counts","*.txt")
+#' res <- DoGs:::convertCountFile2Table("~/Dropbox (BBSR)/Aimin_project/Research/DoGs/Counts","*.txt")
 #'
 convertCountFile2Table <- function(input.count.file.dir,input.file.pattern)
 {
@@ -5320,7 +5320,7 @@ removeReadsOnExonIntronUsingJobArray <- function(input.bed.file.dir, annotation.
 }
 
 getCount4DownstreamUsingJobArray <- function(input.bed.file.dir, annotation.bed.file.dir,
-                                output.count.file.dir)
+                                output.count.file.dir,d)
 {
 
   index <- system('echo $LSB_JOBINDEX',intern = TRUE)
@@ -5335,7 +5335,6 @@ getCount4DownstreamUsingJobArray <- function(input.bed.file.dir, annotation.bed.
 
   annotationBed <- parserreadfiles(annotation.bed.file.dir,"bed",sample.group=c("hg19_gene.bed"))
 
-  #m.id <- grep("login", system("hostname", intern = TRUE))
   exon.intron <- paste(unlist(annotationBed$input),collapse=" ")
 
   if (!dir.exists(output.count.file.dir))
@@ -5343,38 +5342,22 @@ getCount4DownstreamUsingJobArray <- function(input.bed.file.dir, annotation.bed.
     dir.create(output.count.file.dir, recursive = TRUE)
   }
 
-  #cmd.l <- lapply(1:length(res), function(u, m.id, Wall.time, cores, Memory,
-  #                                        span.ptile, res, annotationBed, output.count.file.dir)
-  #{
     u <- as.integer(index)
 
     file_name = file_path_sans_ext(basename(res[[u]]))
-
-    # if (m.id == 1)
-    # {
-    #   job.name = paste0("bed2count.", u)
-    #   cmd1 <- ChipSeq:::usePegasus("parallel", Wall.time = "72:00", cores = 32,
-    #                                Memory = 16000, span.ptile = 16, job.name)
-    #   exon.intron <- paste(unlist(annotationBed$input),collapse=" ")
-    #   cmd2 = paste("bedtools window -a",exon.intron,"-b",res[[u]],"-l 0 -r 45000 -sw -c",
-    #                "\\>", file.path(output.count.file.dir, paste0(file_name, "_downstream_count.txt")),
-    #                sep = " ")
-    #   cmd3 = paste(cmd1, cmd2, sep = " ")
-    # } else
-    #{
-      cmd3 = paste("bedtools window -a",exon.intron,"-b",res[[u]],"-l 0 -r 45000 -sw -c",
-                   ">", file.path(output.count.file.dir, paste0(file_name, "_downstream_count.txt")),
+    
+    downstream.region <- paste(c("-l","0","-r",d,"-sw","-c"),collapse = " ")
+    output.file.name <- paste0(file_name,"_",d,"_downstream_count.txt")
+    
+    cmd3 = paste("bedtools window -a",exon.intron,"-b",res[[u]],downstream.region,
+                   ">", file.path(output.count.file.dir, output.file.name),
                    sep = " ")
-    #}
-
+      
     cmd <- cmd3
 
     cat(cmd, "\n\n")
 
     system(cmd)
-
-  #  cmd
-#  }, m.id, Wall.time, cores, Memory, span.ptile, res, annotationBed, output.count.file.dir)
 
 }
 
@@ -5706,3 +5689,22 @@ deawVolcano <- function(results) {
   #colored
   colored + scale_y_continuous(trans = "log1p")
 }
+
+# RPKM = (Rg * 10^6) / (T * Lg)
+# where
+# Rc: number of reads mapped to a particular region(gene,transcript c = count
+# T = total number of reads for a run
+# FLg: length of transcript (kilobases)
+
+RPKM <- function(Rg, Lg, T) {
+  rpkm <- (Rg * 1e6)/(T * Lg)
+  return(rpkm)
+}
+
+X <- data.frame(gene=c("A","B","C","D","E"), count=c(80, 10, 6, 3, 1),
+                length=c(100, 50, 25, 5, 1))
+X
+rpkm.X<-ddply(X, .(gene), summarize, rpkm = (count*1e6)/((sum(X$count)*length)))
+
+
+
