@@ -13,11 +13,8 @@ import(org.Hs.eg.db)
 import(SummarizedExperiment)
 import(biomaRt)
 
-export(AdjustBatch)
-export(CheckBatch)
-
 importFrom(tools,file_ext,file_path_sans_ext)
-
+importFrom(plyr,ddply)
 
 export(AdjustBatch)
 export(CheckBatch)
@@ -48,3 +45,5 @@ export(matchbed2annotation)
 export(getcountsfromMatchedbed)
 export(getcounts)
 export(parserAnnotationFile)
+export(AdjustBatch)
+export(CheckBatch)
