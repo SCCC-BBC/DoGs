@@ -276,10 +276,11 @@ runDoGsOnClusterStartFromBam <- function(sample.info.file,gene.gtf,genome.index,
   input=file.path(output.dir,"BedRmExonIntron")
   processed.gene.gtf=processed.gene.gtf
   output=file.path(output.dir,"Counts")
+  d <- 5000
   #gene.gtf=gene.gtf
   #genome.index=genome.index
   #wait.job.name = 'wait.job.name = "sra2fastq"'
-  Rfun2 <- ')'
+  Rfun2 <- paste(d,')')
 
   Rinput <- paste0('\\"',input,'\\",','\\"',processed.gene.gtf,'\\",','\\"',output,'\\"')
   Rfun <-paste0(Rfun1,Rinput,Rfun2)
