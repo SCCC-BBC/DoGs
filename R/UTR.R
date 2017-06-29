@@ -5701,10 +5701,10 @@ RPKM <- function(Rg, Lg, T) {
   return(rpkm)
 }
 
-X <- data.frame(gene=c("A","B","C","D","E"), count=c(80, 10, 6, 3, 1),
-                length=c(100, 50, 25, 5, 1))
-X
-rpkm.X<-ddply(X, .(gene), summarize, rpkm = (count*1e6)/((sum(X$count)*length)))
+# X <- data.frame(gene=c("A","B","C","D","E"), count=c(80, 10, 6, 3, 1),
+#                 length=c(100, 50, 25, 5, 1))
+# X
+# rpkm.X<-ddply(X, .(gene), summarize, rpkm = (count*1e6)/((sum(X$count)*length)))
 
 
 
