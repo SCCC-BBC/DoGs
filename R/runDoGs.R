@@ -57,9 +57,9 @@ system(test)
 
 }
 
-#' R -e 'library(ChipSeq);library(DoGs);DoGs:::runDoGsOnCluster("SRP058633",file.path(system.file("extdata",package = "DoGs"),"sample_infor.txt"),"/projects/ctsi/bbc/Genome_Ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.gtf","/projects/ctsi/bbc/Genome_Ref/Homo_sapiens/UCSC/hg19/Sequence/Bowtie2Index/genome","/projects/ctsi/bbc/aimin/annotation/","/scratch/projects/bbc/aiminy_project/DoGs/TestPipeline")'
+#' R -e 'library(ChipSeq);library(DoGs);DoGs:::runDoGsOnCluster("SRP058633",file.path(system.file("extdata",package = "DoGs"),"sample_infor.txt"),"/projects/ctsi/bbc/Genome_Ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.gtf","/projects/ctsi/bbc/Genome_Ref/Homo_sapiens/UCSC/hg19/Sequence/Bowtie2Index/genome","/projects/ctsi/bbc/aimin/annotation/","/scratch/projects/bbc/aiminy_project/DoGs/TestPipeline",5000)'
 
-runDoGsOnCluster <- function(sra.accession.number,sample.info.file,gene.gtf,genome.index,processed.gene.gtf,output.dir) {
+runDoGsOnCluster <- function(sra.accession.number,sample.info.file,gene.gtf,genome.index,processed.gene.gtf,output.dir,downstreamD) {
 
   if (!dir.exists(output.dir))
   {
@@ -138,13 +138,22 @@ runDoGsOnCluster <- function(sra.accession.number,sample.info.file,gene.gtf,geno
   system(rm.exon.intron)
 
   Rfun1 <- 'library(ChipSeq);library(DoGs);re <- DoGs:::getCount4DownstreamUsingJobArray('
+  
   input=file.path(output.dir,"BedRmExonIntron")
   processed.gene.gtf=processed.gene.gtf
   output=file.path(output.dir,"Counts")
+  
+  
+  #input="A"
+  #processed.gene.gtf="B"
+  #output="C"
+  d <- downstreamD
+  
+  
   #gene.gtf=gene.gtf
   #genome.index=genome.index
   #wait.job.name = 'wait.job.name = "sra2fastq"'
-  Rfun2 <- ')'
+  Rfun2 <- paste0(',',d,')')
 
   Rinput <- paste0('\\"',input,'\\",','\\"',processed.gene.gtf,'\\",','\\"',output,'\\"')
   Rfun <-paste0(Rfun1,Rinput,Rfun2)
