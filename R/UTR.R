@@ -5706,5 +5706,9 @@ RPKM <- function(Rg, Lg, T) {
 # X
 # rpkm.X<-ddply(X, .(gene), summarize, rpkm = (count*1e6)/((sum(X$count)*length)))
 
+
 res.bed <- read.table("~/Dropbox (BBSR)/Aimin_project/Research/DoGs/data/hg19_gene.bed")
 dogs.bed <- cbind.data.frame(res.bed[,c(1,3)],res.bed[,3]+5000,res.bed[,c(4,6)])
+colnames(dogs.bed)=c("chr","start","end","name","strand")
+
+

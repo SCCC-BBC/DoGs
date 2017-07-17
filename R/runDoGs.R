@@ -316,3 +316,23 @@ runDoGsOnClusterStartFromBam <- function(sample.info.file,gene.gtf,genome.index,
   system(get.DE)
 
 }
+
+runDownLoadAndConversonOnCluster <- function(sra.accession.number,sample.num,output.dir) {
+  
+  if (!dir.exists(output.dir))
+  {
+    dir.create(output.dir, recursive = TRUE)
+  }
+  
+  re <- DoGs:::useWget2Download(sra.accession.number,file.path(output.dir,"SRAFiles"))
+  
+  # This setting works
+  Rfun1 <- 'library(ChipSeq);library(DoGs);re <- DoGs:::convertSra2FastqUseJobArray('
+  input=file.path(output.dir,"SRAFiles")
+  output=file.path(output.dir,"Fastqfiles")
+  Rfun2 <- ')'
+  Rfun3 <- paste0(Rfun1,'\\"',input,'\\"',',\\"',output,'\\"',Rfun2)
+  
+  sra2fastq <- createBsubJobArrayRfun(Rfun3,paste0("sra2fastq[1-",sample.num,"]"),"wgetDownload")
+  system(sra2fastq)
+}
