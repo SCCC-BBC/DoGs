@@ -2568,6 +2568,9 @@ parserreadfiles <- function(input.file.dir, input.file.type, sample.group = NULL
 #'
 useWget2Download <- function(sra.accession.number, output.dir)
 {
+
+  if (!dir.exists(output.dir)){dir.create(output.dir,recursive = TRUE)}
+
     cmd0 <- "wget -c -r -nd -np -L"
     cmd1 <- "ftp://ftp-trace.ncbi.nlm.nih.gov/sra/sra-instant/reads/ByStudy/sra/SRP/"
 
