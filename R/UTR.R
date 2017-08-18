@@ -2564,8 +2564,12 @@ parserreadfiles <- function(input.file.dir, input.file.type, sample.group = NULL
 #' Example:
 #' R -e 'library(ChipSeq);library(DoGs);re <- DoGs:::useWget2Download("SRP058633","/nethome/axy148/DoGsExample")'
 #'
-#'re <- DoGs:::useWget2Download("SRP058633","/nethome/axy148/DoGsExample")
+#' re <- DoGs:::useWget2Download("SRP058633","/nethome/axy148/DoGsExample")                      
 #'
+#' in desktop linux, use the following:
+#'                       
+#' R -e 'library(ChipSeq);library(DoGs);DoGs:::useWget2Download("SRP058633",file.path("/media/aiminyan/DATA/Dropbox\\ \\(BBSR\\)/Aimin_project/DoGs_data_results","SRAFiles"))'
+                       
 useWget2Download <- function(sra.accession.number, output.dir)
 {
 
