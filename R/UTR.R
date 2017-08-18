@@ -5345,14 +5345,14 @@ getCount4DownstreamUsingJobArray <- function(input.bed.file.dir, annotation.bed.
     u <- as.integer(index)
 
     file_name = file_path_sans_ext(basename(res[[u]]))
-    
+
     downstream.region <- paste(c("-l","0","-r",d,"-sw","-c"),collapse = " ")
     output.file.name <- paste0(file_name,"_",d,"_downstream_count.txt")
-    
+
     cmd3 = paste("bedtools window -a",exon.intron,"-b",res[[u]],downstream.region,
                    ">", file.path(output.count.file.dir, output.file.name),
                    sep = " ")
-      
+
     cmd <- cmd3
 
     cat(cmd, "\n\n")
@@ -5706,10 +5706,52 @@ RPKM <- function(Rg, Lg, T) {
 # X
 # rpkm.X<-ddply(X, .(gene), summarize, rpkm = (count*1e6)/((sum(X$count)*length)))
 
-testNewFunction <- function() {
-  res.bed <- read.table("~/Dropbox (BBSR)/Aimin_project/Research/DoGs/data/hg19_gene.bed")
-  dogs.bed <- cbind.data.frame(res.bed[,c(1,3)],res.bed[,3]+5000,res.bed[,c(4,6)])
-  colnames(dogs.bed)=c("chr","start","end","name","strand")
+input.file <- "~/Dropbox (BBSR)/Aimin_project/Research/DoGs/data/hg19_gene.bed"
+output.file.dir <- "~/Dropbox (BBSR)/Aimin_project/Research/DoGs/data"
+
+generate1kbBin4DoGs <- function(input.file,l.dog,output.file.dir) {
+
+  library(rtracklayer)
+  gr_obj =  import(input.file)
+  elementMetadata(gr_obj)[,2:5]<-NULL
+
+  start(gr_obj) <- end(gr_obj)
+  end(gr_obj) <- start(gr_obj)+l.dog
+
+  n=l.dog/1000
+
+  gr_obj_interval <- tile(gr_obj,n)
+
+  names(gr_obj_interval) <- gr_obj$name
+  #id <- rep(gr_obj$name, each = 5)
+
+  gr <- unlist(gr_obj_interval)
+
+  df <- data.frame(seqnames=seqnames(gr),
+                                       starts=start(gr),
+                                       ends=end(gr)+1,
+                                       strands=strand(gr),
+                                       tx=names(gr))
+
+
+  write.table(df, file=file.path(output.file.dir,"dog_1kb.bed"), quote=F, sep="\t", row.names=F, col.names=F)
+
+
+  # xx <- strrep(gr_obj$name, 5)
+  # queries.grl <- lapply(1:length(gr_obj_interval),
+  #                       function(x,gr_obj_interval){
+  #   gr_obj_interval[[x]]$id <- names(gr_obj_interval)[x]
+  #   return(gr_obj_interval[[x]])
+  #   },gr_obj_interval)
+  #
+  # library(GenomicRanges)
+  # gr_list = split(gr_obj, gr_obj$name)
+  #
+  # res.bed <- as.Grange(read.table())
+  #
+  #
+  # dogs.bed <- cbind.data.frame(res.bed[,c(1,3)],res.bed[,3]+5000,res.bed[,c(4,6)]#)
+  # colnames(dogs.bed)=c("chr","start","end","name","strand")
 }
 
 
