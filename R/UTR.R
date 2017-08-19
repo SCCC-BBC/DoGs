@@ -5784,7 +5784,7 @@ convertSra2Fastq <- function(sra.file.dir, output.dir)
 
       file_name = file_path_sans_ext(basename(res[[u]]))
 
-      cmd1 <- paste(cmd0, res[[u]], "-O", output.dir, sep = " ")
+      cmd1 <- paste(cmd0, paste0('"',res[[u]],'"'),"-O", paste0('"',output.dir,'"'),sep = " ")
 
       cmd2 <- cmd1
 
