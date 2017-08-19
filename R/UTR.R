@@ -2564,12 +2564,12 @@ parserreadfiles <- function(input.file.dir, input.file.type, sample.group = NULL
 #' Example:
 #' R -e 'library(ChipSeq);library(DoGs);re <- DoGs:::useWget2Download("SRP058633","/nethome/axy148/DoGsExample")'
 #'
-#' re <- DoGs:::useWget2Download("SRP058633","/nethome/axy148/DoGsExample")                      
+#' re <- DoGs:::useWget2Download("SRP058633","/nethome/axy148/DoGsExample")
 #'
 #' in desktop linux, use the following:
-#'                       
+#'
 #' R -e 'library(ChipSeq);library(DoGs);DoGs:::useWget2Download("SRP058633",file.path("/media/aiminyan/DATA/Dropbox\\ \\(BBSR\\)/Aimin_project/DoGs_data_results","SRAFiles"))'
-                       
+
 useWget2Download <- function(sra.accession.number, output.dir)
 {
 
@@ -5762,3 +5762,38 @@ generate1kbBin4DoGs <- function(input.file,l.dog,output.file.dir) {
 }
 
 
+convertSra2Fastq <- function(sra.file.dir, output.dir)
+{
+
+  re <- parserreadfiles(sra.file.dir, "sra")
+
+  res <- re$input
+
+  if (!dir.exists(output.dir))
+  {
+    dir.create(output.dir,recursive = TRUE)
+  }
+
+
+    cmd0 <- "fastq-dump --split-3"
+
+    cmd.l <- lapply(1:length(res), function(u, res, output.dir)
+    {
+
+      path_name = dirname(res[[u]])
+
+      file_name = file_path_sans_ext(basename(res[[u]]))
+
+      cmd1 <- paste(cmd0, res[[u]], "-O", output.dir, sep = " ")
+
+      cmd2 <- cmd1
+
+      cat(cmd2,"\n")
+
+      system(cmd2)
+    },res,output.dir)
+
+      re <- list(cmdl = cmd.l, output.dir = output.dir)
+      re
+
+}
