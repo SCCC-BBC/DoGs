@@ -5761,7 +5761,9 @@ generate1kbBin4DoGs <- function(input.file,l.dog,output.file.dir) {
   # colnames(dogs.bed)=c("chr","start","end","name","strand")
 }
 
-
+# In desktop linux                       
+# R -e 'library(ChipSeq);library(DoGs);DoGs:::convertSra2Fastq("/media/aiminyan/DATA/Dropbox (BBSR)/Aimin_project/DoGs_data_results/SRAFiles","/media/aiminyan/DATA/Dropbox (BBSR)/Aimin_project/DoGs_data_results/sra2fastq")'
+                       
 convertSra2Fastq <- function(sra.file.dir, output.dir)
 {
 
