@@ -5790,7 +5790,7 @@ convertSra2Fastq <- function(sra.file.dir, output.dir)
 
       cat(cmd2,"\n")
 
-      system(cmd2)
+      system(cmd2,intern = TRUE)
     },res,output.dir)
 
       re <- list(cmdl = cmd.l, output.dir = output.dir)
