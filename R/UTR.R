@@ -4948,7 +4948,7 @@ alignmentUseJobArray <- function(input.fastq.files.dir, output.dir, gene.model.f
   #print(xxx[as.integer(index)])
 
   m.id <- grep("login", system("hostname", intern = TRUE))
-  cmd6 = "tophat --library-type fr-firststrand -g 1 -G"
+  cmd6 = "module unload python;tophat --library-type fr-firststrand -g 1 -G"
   cmd8 = "-p 4 -o"
 
   #for (i in 1:length(xxx))
