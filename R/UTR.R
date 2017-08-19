@@ -4896,6 +4896,9 @@ useTophat4Alignment2 <- function(input.fastq.files.dir, output.dir, gene.model.f
 
 #' bsub -P bbc -J "alignment[1-8]" -o %J.alignment.%I.log -e %J.alignment.%I.err -W 72:00 -n 16 -q parallel -R 'rusage[mem= 25000 ] span[ptile= 8 ]' -u aimin.yan@med.miami.edu "R -e 'library(ChipSeq);library(DoGs);DoGs:::alignmentUseJobArray(\"/scratch/projects/bbc/aiminy_project/DoGsFastq\",\"/scratch/projects/bbc/aiminy_project/DoGs_AlignmentBamTophatGeneral2\",\"/projects/ctsi/bbc/Genome_Ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.gtf\",\"/projects/ctsi/bbc/Genome_Ref/Homo_sapiens/UCSC/hg19/Sequence/Bowtie2Index/genome\")'"
 
+#' bsub -P bbc -J "alignment[1-8]" -o %J.alignment.%I.log -e %J.alignment.%I.err -W 72:00 -n 16 -q parallel -R 'rusage[mem= 25000 ] span[ptile= 8 ]' -u aimin.yan@med.miami.edu "R -e 'library(ChipSeq);library(DoGs);DoGs:::alignmentUseJobArray(\"/scratch/projects/bbc/aiminy_project/DoGs/TestPipeline/Fastqfiles\",\"/scratch/projects/bbc/aiminy_project/DoGs/TestPipeline/Alignment\",\"/projects/ctsi/bbc/Genome_Ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.gtf\",\"/projects/ctsi/bbc/Genome_Ref/Homo_sapiens/UCSC/hg19/Sequence/Bowtie2Index/genome\")'"
+
+
 alignmentUseJobArray <- function(input.fastq.files.dir, output.dir, gene.model.file = NULL,
                                  genome.index, cmd.input="parallel",wait.job.name=NULL)
 {
@@ -5761,9 +5764,9 @@ generate1kbBin4DoGs <- function(input.file,l.dog,output.file.dir) {
   # colnames(dogs.bed)=c("chr","start","end","name","strand")
 }
 
-# In desktop linux                       
+# In desktop linux
 # R -e 'library(ChipSeq);library(DoGs);DoGs:::convertSra2Fastq("/media/aiminyan/DATA/Dropbox (BBSR)/Aimin_project/DoGs_data_results/SRAFiles","/media/aiminyan/DATA/Dropbox (BBSR)/Aimin_project/DoGs_data_results/sra2fastq")'
-                       
+
 convertSra2Fastq <- function(sra.file.dir, output.dir)
 {
 
