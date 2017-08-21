@@ -4237,7 +4237,7 @@ checkStrand <- function(input.alignment.dir)
 #' @examples
 #' R -e 'library(DoGs);DoGs:::processBamFiles('/scratch/projects/bbc/aiminy_project/DoGs_AlignmentBamTophatGeneral2','/scratch/projects/bbc/aiminy_project/DoGs/BAM')'
 #'
-processBamFiles <- function(input.alignment.dir, output.dir)
+processBamFiles <- function(input.alignment.dir, output.dir, use.cluster=NULL)
 {
     if (!dir.exists(output.dir))
     {
@@ -4266,8 +4266,12 @@ processBamFiles <- function(input.alignment.dir, output.dir)
 
         sample.name <- paste(y, x, file.name, sep = "-")
 
+        if(!is.null(use.cluster)){
         cmd <- paste(cmd1, cmd0, cmd2, u, file.path(output.dir, sample.name),
             sep = " ")
+        }else{
+        cmd <- paste(cmd2, u, file.path(output.dir, sample.name),sep = " ")
+        }
 
         # system(cmd,intern = TRUE
         cmd
