@@ -2726,13 +2726,13 @@ useInferExperiment <- function(input.file.dir, ref.gene.bed.file, output.dir)
 #'
 #'R -e 'library(ChipSeq);library(DoGs);re <- DoGs:::convertbam2bed('/scratch/projects/bbc/aiminy_project/DoGs/BAM','/scratch/projects/bbc/aiminy_project/DoGs')'
 #'
-convertbam2bed <- function(input.bamfile.dir, output.bedfile.dir)
+convertbam2bed <- function(input.bamfile.dir, output.bedfile.dir,use.cluster=NULL)
 {
     res <- parserreadfiles(input.bamfile.dir, "bam")
 
     res <- res$input
 
-    m.id <- grep("login", system("hostname", intern = TRUE))
+    #m.id <- grep("login", system("hostname", intern = TRUE))
 
     # if (!dir.exists(output.bedfile.dir)) { dir.create(output.bedfile.dir,
     # recursive = TRUE) }
@@ -2744,7 +2744,7 @@ convertbam2bed <- function(input.bamfile.dir, output.bedfile.dir)
         dir.create(output.bedfile.dir, recursive = TRUE)
     }
 
-    cmd.l <- lapply(1:length(res), function(u, m.id, res, output.bedfile.dir)
+    cmd.l <- lapply(1:length(res), function(u,res, output.bedfile.dir)
     {
         # cat(u,'\n') cmd9 <- 'grep' cmd10 <- '~/PathwaySplice/inst/extdata/' cmd11
         # <- '/QC.spliceJunctionAndExonCounts.forJunctionSeq.txt' cmd12 <- '>' cmd13
@@ -2756,7 +2756,7 @@ convertbam2bed <- function(input.bamfile.dir, output.bedfile.dir)
         file_name = file_path_sans_ext(basename(res[[u]]))
 
         file_name <- paste0(path_name2, "-", file_name)
-        if (m.id == 1)
+        if (!is.null(use.cluster))
         {
             job.name <- paste0("bam2bed.", u)
             cmd0 <- ChipSeq:::usePegasus("parallel", Wall.time = "72:00", cores = 32,
@@ -2769,14 +2769,17 @@ convertbam2bed <- function(input.bamfile.dir, output.bedfile.dir)
                 paste0(file_name, ".bed")), sep = " ")
         } else
         {
-            cmd3 <- paste(cmd1, res[[u]], cmd2, file.path(output.bedfile.dir,
-                paste0(file_name, ".bed")), sep = " ")
+
+            cmd1 <- "bedtools bamtobed -i"
+            cmd2 <- ">"
+            cmd3 <- paste(cmd1, paste0('"',res[[u]],'"'), cmd2, paste0('"',file.path(output.bedfile.dir,
+                paste0(file_name, ".bed")),'"'), sep = " ")
         }
 
         system(cmd3)
 
         cmd3
-    }, m.id, res, output.bedfile.dir)
+    }, res, output.bedfile.dir)
 
     re <- list(cmdl = cmd.l, output.bedfile.dir = output.bedfile.dir)
 
