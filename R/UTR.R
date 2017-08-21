@@ -3747,7 +3747,7 @@ convertBam2bed2 <- function(input.bam.file.dir, output.bed.file.dir)
 #'R -e 'library(ChipSeq);library(DoGs);DoGs:::removeReadsOnExonIntron("/scratch/projects/bbc/aiminy_project/DoGs/BedFileFromBam","/projects/ctsi/bbc/aimin/annotation/","/scratch/projects/bbc/aiminy_project/DoGs/BedRmExonIntron")'
 #'
 removeReadsOnExonIntron <- function(input.bed.file.dir, annotation.bed.file.dir,
-    output.bed.file.dir)
+    output.bed.file.dir,use.cluster=NULL)
     {
     re <- parserreadfiles(input.bed.file.dir, "bed")
 
@@ -3755,20 +3755,18 @@ removeReadsOnExonIntron <- function(input.bed.file.dir, annotation.bed.file.dir,
 
     annotationBed <- parserreadfiles(annotation.bed.file.dir,"bed",sample.group=c("hg19_exons.bed","hg19_intron.bed"))
 
-    m.id <- grep("login", system("hostname", intern = TRUE))
-
     if (!dir.exists(output.bed.file.dir))
     {
         dir.create(output.bed.file.dir, recursive = TRUE)
     }
 
-    cmd.l <- lapply(1:length(res), function(u, m.id, Wall.time, cores, Memory,
+    cmd.l <- lapply(1:length(res), function(u,Wall.time, cores, Memory,
         span.ptile, res, annotationBed, output.bed.file.dir)
         {
 
         file_name = file_path_sans_ext(basename(res[[u]]))
 
-        if (m.id == 1)
+        if (!is.null(use.cluster))
         {
             job.name = paste0("bedRmExonIntron.", u)
             cmd1 <- ChipSeq:::usePegasus("parallel", Wall.time = "72:00", cores = 32,
@@ -3780,8 +3778,9 @@ removeReadsOnExonIntron <- function(input.bed.file.dir, annotation.bed.file.dir,
             cmd3 = paste(cmd1, cmd2, sep = " ")
         } else
         {
-            cmd3 = paste("bedtools intersect -v -a", res[[u]], "-b", exon, intron,
-                "\\>", file.path(output.bed.file.dir, paste0(file_name, "_rm_exon_intron.bed")),
+            exon.intron <- paste(paste0('"',unlist(annotationBed$input),'"'),collapse=" ")
+            cmd3 = paste("bedtools intersect -v -a", paste0('"',res[[u]],'"'), "-b", exon.intron,
+                ">", paste0('"',file.path(output.bed.file.dir, paste0(file_name, "_rm_exon_intron.bed")),'"'),
                 sep = " ")
         }
 
@@ -3792,7 +3791,7 @@ removeReadsOnExonIntron <- function(input.bed.file.dir, annotation.bed.file.dir,
         system(cmd)
 
         cmd
-    }, m.id, Wall.time, cores, Memory, span.ptile, res, annotationBed, output.bed.file.dir)
+    },Wall.time, cores, Memory, span.ptile, res, annotationBed, output.bed.file.dir)
 
 }
 
