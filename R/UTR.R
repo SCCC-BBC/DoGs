@@ -3799,14 +3799,14 @@ removeReadsOnExonIntron <- function(input.bed.file.dir, annotation.bed.file.dir,
 
 #'R -e 'library(ChipSeq);library(DoGs);DoGs:::getCount4Downstream(""/scratch/projects/bbc/aiminy_project/DoGs/BedRmExonIntron","/projects/ctsi/bbc/aimin/annotation/","/scratch/projects/bbc/aiminy_project/DoGs/Counts45KB")'
 #'
-getCount4Downstream <- function(input.bed.file.dir, annotation.bed.file.dir,
+getCount4Downstream <- function(input.bed.file.dir, annotation.bed.file.dir,which.beds,
                                       output.count.file.dir,ld=0,rd=0,use.cluster=NULL)
   {
     re <- parserreadfiles(input.bed.file.dir, "bed")
 
     res <- re$input
 
-    annotationBed <- parserreadfiles(annotation.bed.file.dir,"bed",sample.group=c("hg19_gene.bed"))
+    annotationBed <- parserreadfiles(annotation.bed.file.dir,"bed",sample.group=which.bed)
 
     if (!dir.exists(output.count.file.dir))
     {
