@@ -4270,7 +4270,7 @@ processBamFiles <- function(input.alignment.dir, output.dir, use.cluster=NULL)
         cmd <- paste(cmd1, cmd0, cmd2, u, file.path(output.dir, sample.name),
             sep = " ")
         }else{
-        cmd <- paste(cmd2, u, file.path(output.dir, sample.name),sep = " ")
+        cmd <- paste(cmd2, paste0('"',u,'"'), paste0('"',file.path(output.dir, sample.name),'"'),sep = " ")
         }
 
         # system(cmd,intern = TRUE
