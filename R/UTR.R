@@ -3800,7 +3800,7 @@ removeReadsOnExonIntron <- function(input.bed.file.dir, annotation.bed.file.dir,
 #'R -e 'library(ChipSeq);library(DoGs);DoGs:::getCount4Downstream(""/scratch/projects/bbc/aiminy_project/DoGs/BedRmExonIntron","/projects/ctsi/bbc/aimin/annotation/","/scratch/projects/bbc/aiminy_project/DoGs/Counts45KB")'
 #'
 getCount4Downstream <- function(input.bed.file.dir, annotation.bed.file.dir,
-                                      output.count.file.dir)
+                                      output.count.file.dir,ld=0,rd=0,use.cluster=NULL)
   {
     re <- parserreadfiles(input.bed.file.dir, "bed")
 
@@ -3808,20 +3808,18 @@ getCount4Downstream <- function(input.bed.file.dir, annotation.bed.file.dir,
 
     annotationBed <- parserreadfiles(annotation.bed.file.dir,"bed",sample.group=c("hg19_gene.bed"))
 
-    m.id <- grep("login", system("hostname", intern = TRUE))
-
     if (!dir.exists(output.count.file.dir))
     {
       dir.create(output.count.file.dir, recursive = TRUE)
     }
 
-    cmd.l <- lapply(1:length(res), function(u, m.id, Wall.time, cores, Memory,
+    cmd.l <- lapply(1:length(res), function(u,Wall.time, cores, Memory,
                                             span.ptile, res, annotationBed, output.count.file.dir)
     {
 
       file_name = file_path_sans_ext(basename(res[[u]]))
 
-      if (m.id == 1)
+      if (!is.null(use.cluster))
       {
         job.name = paste0("bed2count.", u)
         cmd1 <- ChipSeq:::usePegasus("parallel", Wall.time = "72:00", cores = 32,
@@ -3833,9 +3831,12 @@ getCount4Downstream <- function(input.bed.file.dir, annotation.bed.file.dir,
         cmd3 = paste(cmd1, cmd2, sep = " ")
       } else
       {
-        cmd3 = paste("bedtools window -a",exon.intron,"-b",res[[u]],"-l 0 -r 45000 -sw -c",
-                             ">", file.path(output.count.file.dir, paste0(file_name, "_downstream_count.txt")),
-                             sep = " ")
+
+        exon.intron <- paste(paste0('"',unlist(annotationBed$input),'"'),collapse=" ")
+
+        cmd3 = paste("bedtools window -a",exon.intron,"-b",paste0('"',res[[u]],'"'),"-l",ld,"-r",rd,"-sw -c",
+                             ">", paste0('"',file.path(output.count.file.dir, paste0(file_name, "_downstream_count.txt")),
+                                         '"'),sep = " ")
       }
 
       cmd <- cmd3
@@ -3845,9 +3846,9 @@ getCount4Downstream <- function(input.bed.file.dir, annotation.bed.file.dir,
       system(cmd)
 
       cmd
-    }, m.id, Wall.time, cores, Memory, span.ptile, res, annotationBed, output.count.file.dir)
+    },Wall.time, cores, Memory, span.ptile, res, annotationBed, output.count.file.dir)
 
-  }
+}
 
 #' res <- DoGs:::convertCountFile2Table("~/Dropbox (BBSR)/Aimin_project/Research/DoGs/Counts","*.txt")
 #'
@@ -5724,8 +5725,10 @@ RPKM <- function(Rg, Lg, T) {
 # X
 # rpkm.X<-ddply(X, .(gene), summarize, rpkm = (count*1e6)/((sum(X$count)*length)))
 
-input.file <- "~/Dropbox (BBSR)/Aimin_project/Research/DoGs/data/hg19_gene.bed"
-output.file.dir <- "~/Dropbox (BBSR)/Aimin_project/Research/DoGs/data"
+#input.file <- "~/Dropbox (BBSR)/Aimin_project/Research/DoGs/data/hg19_gene.bed"
+#output.file.dir <- "~/Dropbox (BBSR)/Aimin_project/Research/DoGs/data"
+
+#generate1kbBin4DoGs(input.file,5000,output.file.dir)
 
 generate1kbBin4DoGs <- function(input.file,l.dog,output.file.dir) {
 
@@ -5748,8 +5751,9 @@ generate1kbBin4DoGs <- function(input.file,l.dog,output.file.dir) {
   df <- data.frame(seqnames=seqnames(gr),
                                        starts=start(gr),
                                        ends=end(gr)+1,
-                                       strands=strand(gr),
-                                       tx=names(gr))
+                                       scores=c(rep("0", length(gr))),
+                                       tx=names(gr),
+                                       strands=strand(gr))
 
 
   write.table(df, file=file.path(output.file.dir,"dog_1kb.bed"), quote=F, sep="\t", row.names=F, col.names=F)
