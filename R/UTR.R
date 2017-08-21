@@ -3806,7 +3806,7 @@ getCount4Downstream <- function(input.bed.file.dir, annotation.bed.file.dir,whic
 
     res <- re$input
 
-    annotationBed <- parserreadfiles(annotation.bed.file.dir,"bed",sample.group=which.bed)
+    annotationBed <- parserreadfiles(annotation.bed.file.dir,"bed",sample.group=which.beds)
 
     if (!dir.exists(output.count.file.dir))
     {
