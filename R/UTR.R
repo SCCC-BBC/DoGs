@@ -5147,6 +5147,8 @@ createBsubJobArrayRfun <- function(Rfun,job.name,wait.job.name){
 #test <- createBubRfun(Rfun,"sra2fastq[1-8]","wgetDownload")
 #system(test)
 
+# bsub -P bbc -J "ProcessBam[1-8]" -o %J.ProcessBam.%I.log -e %J.ProcessBam.%I.err -W 72:00 -n 16 -q parallel -R 'rusage[mem= 25000 ] span[ptile= 8 ]' -u aimin.yan@med.miami.edu "R -e 'library(ChipSeq);library(DoGs);DoGs:::processBamFilesUseJobArray(\"/scratch/projects/bbc/aiminy_project/DoGs/TestPipeline/Alignment\",\"/scratch/projects/bbc/aiminy_project/DoGs/TestPipeline/Bam\")'"
+
 processBamFilesUseJobArray <- function(input.alignment.dir, output.dir)
 {
   if (!dir.exists(output.dir))
