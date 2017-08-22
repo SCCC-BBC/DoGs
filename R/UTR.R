@@ -5720,10 +5720,10 @@ RPKM <- function(Rg, Lg, T) {
   return(rpkm)
 }
 
-# X <- data.frame(gene=c("A","B","C","D","E"), count=c(80, 10, 6, 3, 1),
-#                 length=c(100, 50, 25, 5, 1))
-# X
-# rpkm.X<-ddply(X, .(gene), summarize, rpkm = (count*1e6)/((sum(X$count)*length)))
+ # X <- data.frame(gene=c("A","B","C","D","E"), count=c(80, 10, 6, 3, 1),
+ #                 length=c(100, 50, 25, 5, 1))
+ # X
+ # rpkm.X<-ddply(X, .(gene), summarize, rpkm = (count*1e6)/((sum(X$count)*length)))
 
 #input.file <- "~/Dropbox (BBSR)/Aimin_project/Research/DoGs/data/hg19_gene.bed"
 #output.file.dir <- "~/Dropbox (BBSR)/Aimin_project/Research/DoGs/data"
@@ -5812,5 +5812,134 @@ convertSra2Fastq <- function(sra.file.dir, output.dir)
 
       re <- list(cmdl = cmd.l, output.dir = output.dir)
       re
+
+}
+
+# input.file.dir <- "/Users/axy148/Dropbox (BBSR)/Aimin_project/DoGs_data_results/Counts_iterate_1kb_5kb"
+
+# re <- DoGs:::getRPKM(input.file.dir)
+
+getRPKM <- function(input.file.dir ){
+
+  re <- list.files(path = input.file.dir, pattern = ".txt", all.files = FALSE,
+             full.names = TRUE, recursive = TRUE,
+             ignore.case = FALSE, include.dirs = TRUE, no.. = FALSE)
+
+  xx <- lapply(re,function(u){
+     x <- read.table(u,header = FALSE)
+     colnames(x) <- c("chr","start","end","score","gene","strand","count")
+     length <- x$end-x$start
+    #rpkm<-ddply(x, .(gene), summarize, rpkm = (count*1e6)/((sum(x$count)*length)))
+    xx <- cbind(x,length)
+    xx
+  })
+
+    xxx <- lapply(xx,function(u){
+      x <- u
+      rpkm <- (x$count*1000000)/(sum(x$count)*1000)
+      xxx <- cbind(x,rpkm)
+      xxx
+    })
+
+  xxx
+}
+
+# x A data frame including transcript information
+#
+# uc001adk.3 <- re[[1]][which(re[[1]]$gene=="uc001adk.3"),]
+#
+# re.end.point <- getEndPoint(uc001adk.3,0.5)
+#
+# uc001adk.3
+# re.end.point
+#
+# XX <- head(re[[1]],30)
+# XX
+# re.end.point.XX <- getEndPoint(XX,0.5)
+# re.end.point.XX
+#
+getEndPoint <- function(x,fraction) {
+
+  end.point<-ddply(x, .(gene),
+                   function(x,fraction){
+
+                            a <- x[1,9]
+                            a <- fraction*a
+                            print(a)
+                            b <- x[which(x$rpkm<=a),][1,]
+
+                            if(dim(b)[1]!=1)
+                              {return(NULL)
+                              }else{return(b)}
+                          },fraction)
+  end.point
+}
+
+# # rre <- identifyDoGsEndPoint(re)
+#
+# identifyDoGsEndPoint <- function(re){
+#
+#   xxx <- re
+#   xxxx <- lapply(xxx,function(u){
+#   x <- u
+#
+#   e.p
+# })
+#
+#  end.point
+# }
+
+#'R -e 'library(ChipSeq);library(DoGs);DoGs:::getCoverage("/media/aiminyan/DATA/Dropbox (BBSR)/Aimin_project/DoGs_data_results/BedRmExonIntron","/media/aiminyan/DATA/Dropbox (BBSR)/Aimin_project/DoGs_data_results/annotation","/hg19_DoGs_2.bed","/media/aiminyan/DATA/Dropbox (BBSR)/Aimin_project/DoGs_data_results/coverage")'
+#'
+getCoverage <- function(input.bed.file.dir, annotation.bed.file.dir,which.beds,
+                                output.count.file.dir,ld=0,rd=0,use.cluster=NULL)
+{
+  re <- parserreadfiles(input.bed.file.dir, "bed")
+
+  res <- re$input
+
+  annotationBed <- parserreadfiles(annotation.bed.file.dir,"bed",sample.group=which.beds)
+
+  if (!dir.exists(output.count.file.dir))
+  {
+    dir.create(output.count.file.dir, recursive = TRUE)
+  }
+
+  cmd.l <- lapply(1:length(res), function(u,Wall.time, cores, Memory,
+                                          span.ptile, res, annotationBed, output.count.file.dir)
+  {
+
+    file_name = file_path_sans_ext(basename(res[[u]]))
+
+    #bedtools coverage -a A.bed -b B.bed -s
+
+    if (!is.null(use.cluster))
+    {
+      job.name = paste0("bed2count.", u)
+      cmd1 <- ChipSeq:::usePegasus("parallel", Wall.time = "72:00", cores = 32,
+                                   Memory = 16000, span.ptile = 16, job.name)
+      exon.intron <- paste(unlist(annotationBed$input),collapse=" ")
+      cmd2 = paste("bedtools coverage -a",exon.intron,"-b",res[[u]],"-s",
+                   "\\>", file.path(output.count.file.dir, paste0(file_name, "_coverage.txt")),
+                   sep = " ")
+      cmd3 = paste(cmd1, cmd2, sep = " ")
+    } else
+    {
+
+      exon.intron <- paste(paste0('"',unlist(annotationBed$input),'"'),collapse=" ")
+
+      cmd3 = paste("bedtools coverage -a",exon.intron,"-b",paste0('"',res[[u]],'"'),"-s",
+                   ">", paste0('"',file.path(output.count.file.dir, paste0(file_name, "_coverage.txt")),
+                               '"'),sep = " ")
+    }
+
+    cmd <- cmd3
+
+    cat(cmd, "\n\n")
+
+    system(cmd)
+
+    cmd
+  },Wall.time, cores, Memory, span.ptile, res, annotationBed, output.count.file.dir)
 
 }
