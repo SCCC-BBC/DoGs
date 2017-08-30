@@ -5958,9 +5958,10 @@ generateDoGsAnnotation <- function(annotation.bed.file.dir,which.beds,
     dir.create(output.annotation.bed.file.dir, recursive = TRUE)
   }
 
-  file.bed <- import(annotationBed)
+  print(annotationBed)
+  #file.bed <- import(annotationBed[[1]])
 
-  print(file.bed)
+  #print(file.bed)
 
 
 
