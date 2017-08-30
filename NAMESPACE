@@ -15,6 +15,7 @@ import(biomaRt)
 
 importFrom(tools,file_ext,file_path_sans_ext)
 importFrom(plyr,ddply)
+importFrom(rtracklayer,import,export)
 
 export(AdjustBatch)
 export(CheckBatch)
