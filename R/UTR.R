@@ -5965,6 +5965,8 @@ generateDoGsAnnotation <- function(annotation.bed.file.dir,which.beds,
 
 
 
+  file.bed
+
   # cmd.l <- lapply(1:length(res), function(u,Wall.time, cores, Memory,
   #                                         span.ptile, res, annotationBed, output.count.file.dir)
   # {
