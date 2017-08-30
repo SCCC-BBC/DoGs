@@ -5967,7 +5967,7 @@ generateDoGsAnnotation <- function(annotation.bed.file.dir,which.beds,
 
   re2 <- cbind.data.frame(re1$seqnames,re1$start,re1$end,re1$strand,re1$name)
 
-  re2$start < - re2$end
+  re2$start <- re2$end
   re2$end <- re2$end+dog.length
 
   re3 <- cbind.data.frame(re2$seqnames,re2$start,re2$end,re2$name,re2$end-re2$start,re2$strand)
