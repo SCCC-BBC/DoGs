@@ -5967,6 +5967,8 @@ generateDoGsAnnotation <- function(annotation.bed.file.dir,which.beds,
 
   re2 <- cbind.data.frame(re1$seqnames,re1$start,re1$end,re1$strand,re1$name)
 
+  colnames(re2)=c("seqnames","start","end","strand","name")
+
   re2$start <- re2$end
   re2$end <- re2$end+dog.length
 
@@ -5974,8 +5976,9 @@ generateDoGsAnnotation <- function(annotation.bed.file.dir,which.beds,
 
   file.name <- tools::file_path_sans_ext(basename(annotationBed$input[[1]]))
 
-  export(re3,file.path(output.annotation.bed.file.dir,paste0(file.name,"_",dog.length,".bed")),format = "bed")
+  #export(re3,file.path(output.annotation.bed.file.dir,paste0(file.name,"_",dog.length,".bed")),format = "bed")
 
+  write.table(re3, file = file.path(output.annotation.bed.file.dir,paste0(file.name,"_",dog.length,".bed")), append = FALSE, quote = FALSE, sep = "\t",na = "", dec = ".", row.names = FALSE,col.names = FALSE)
 
   # cmd.l <- lapply(1:length(res), function(u,Wall.time, cores, Memory,
   #                                         span.ptile, res, annotationBed, output.count.file.dir)
