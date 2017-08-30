@@ -5944,7 +5944,6 @@ getCoverage <- function(input.bed.file.dir, annotation.bed.file.dir,which.beds,
 
 }
 
-
 #'R -e 'library(ChipSeq);library(DoGs);DoGs:::generateDoGsAnnotation("/media/aiminyan/DATA/Dropbox (BBSR)/Aimin_project/DoGs_data_results/annotation","hg19_DoGs_2.bed","/media/aiminyan/DATA/Dropbox (BBSR)/Aimin_project/DoGs_data_results/annotation",10000)'
 #'
 generateDoGsAnnotation <- function(annotation.bed.file.dir,which.beds,
@@ -5976,45 +5975,6 @@ generateDoGsAnnotation <- function(annotation.bed.file.dir,which.beds,
 
   file.name <- tools::file_path_sans_ext(basename(annotationBed$input[[1]]))
 
-  #export(re3,file.path(output.annotation.bed.file.dir,paste0(file.name,"_",dog.length,".bed")),format = "bed")
-
   write.table(re3, file = file.path(output.annotation.bed.file.dir,paste0(file.name,"_",dog.length,".bed")), append = FALSE, quote = FALSE, sep = "\t",na = "", dec = ".", row.names = FALSE,col.names = FALSE)
-
-  # cmd.l <- lapply(1:length(res), function(u,Wall.time, cores, Memory,
-  #                                         span.ptile, res, annotationBed, output.count.file.dir)
-  # {
-  #
-  #   file_name = file_path_sans_ext(basename(res[[u]]))
-  #
-  #   #bedtools coverage -a A.bed -b B.bed -s
-  #
-  #   if (!is.null(use.cluster))
-  #   {
-  #     job.name = paste0("bed2count.", u)
-  #     cmd1 <- ChipSeq:::usePegasus("parallel", Wall.time = "72:00", cores = 32,
-  #                                  Memory = 16000, span.ptile = 16, job.name)
-  #     exon.intron <- paste(unlist(annotationBed$input),collapse=" ")
-  #     cmd2 = paste("bedtools coverage -a",exon.intron,"-b",res[[u]],"-s",
-  #                  "\\>", file.path(output.count.file.dir, paste0(file_name, "_coverage.txt")),
-  #                  sep = " ")
-  #     cmd3 = paste(cmd1, cmd2, sep = " ")
-  #   } else
-  #   {
-  #
-  #     exon.intron <- paste(paste0('"',unlist(annotationBed$input),'"'),collapse=" ")
-  #
-  #     cmd3 = paste("bedtools coverage -a",exon.intron,"-b",paste0('"',res[[u]],'"'),"-s",
-  #                  ">", paste0('"',file.path(output.count.file.dir, paste0(file_name, "_coverage.txt")),
-  #                              '"'),sep = " ")
-  #   }
-  #
-  #   cmd <- cmd3
-  #
-  #   cat(cmd, "\n\n")
-  #
-  #   system(cmd)
-  #
-  #   cmd
-  # },Wall.time, cores, Memory, span.ptile, res, annotationBed, output.count.file.dir)
 
 }
