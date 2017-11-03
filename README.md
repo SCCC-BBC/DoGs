@@ -40,7 +40,7 @@ In pegasus terminal
 + To use DoGs in the batch model
 
 ```{r}
-R -e 'library(ChipSeq);library(DoGs);DoGs:::runDoGsOnCluster("SRP058633",file.path(system.file("extdata",package = "DoGs"),"sample_infor.txt"),"/projects/ctsi/bbc/Genome_Ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.gtf","/projects/ctsi/bbc/Genome_Ref/Homo_sapiens/UCSC/hg19/Sequence/Bowtie2Index/genome","/projects/ctsi/bbc/aimin/annotation/","/scratch/projects/bbc/aiminy_project/DoGs/TestPipeline",5000)'
+module unload python;R -e 'library(ChipSeq);library(DoGs);DoGs:::runDoGsOnCluster("SRP058633",file.path(system.file("extdata",package = "DoGs"),"sample_infor.txt"),"/projects/ctsi/bbc/Genome_Ref/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.gtf","/projects/ctsi/bbc/Genome_Ref/Homo_sapiens/UCSC/hg19/Sequence/Bowtie2Index/genome","/projects/ctsi/bbc/aimin/annotation/","/scratch/projects/bbc/aiminy_project/DoGs/TestPipeline",5000)'
 ```
 
 After finishing this step, you can load strand-specific BigWig to IGV to visualize DoGs. The following is an example to show DoGs
