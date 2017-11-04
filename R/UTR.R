@@ -5146,8 +5146,8 @@ useJobArrayOnPegasus <- function(job.option=c("general","parallel","bigmem")
   return(cmd)
 }
 
-createBsubJobArrayRfun <- function(Rfun,job.name,wait.job.name){
-  x <- useJobArrayOnPegasus("parallel","72:00",16,25000,8,job.name,wait.job.name)
+createBsubJobArrayRfun <- function(Rfun,job.name,wait.job.name,jT="parallel",wT="72:00",cpu=16,ram=25000,spanPtile=8){
+  x <- useJobArrayOnPegasus(jT,wT,cpu,ram,spanPtile,job.name,wait.job.name)
   xx <- paste(x,paste0("\"R -e ",paste0("\'",Rfun,"\'"),"\""),sep=" ")
   xx
 }
